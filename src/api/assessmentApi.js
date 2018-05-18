@@ -1,8 +1,9 @@
 "use strict";
 
 var React = require("react");
+var Common = require("./../constants/Common");
 
-var apiUrl = "http://localhost:90/api/assessment/";
+var apiUrl = Common.APIUrl + "assessment/";
 
 var AssessmentApi = {
     getString: function(){

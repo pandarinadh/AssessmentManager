@@ -1,7 +1,6 @@
 {
   "name": "questionbank",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,7 +21,7 @@
     "gulp-eslint": "^0.15.0",
     "gulp-open": "^1.0.0",
     "jquery": "^2.1.4",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.10",
     "object-assign": "^4.1.1",
     "react": "^0.13.3",
     "react-router": "^0.13.3",
@@ -30,5 +29,14 @@
     "toaster-js": "^2.2.0",
     "toastr": "^2.1.0",
     "vinyl-source-stream": "^1.1.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pandarinadh/AssessmentManager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pandarinadh/AssessmentManager/issues"
+  },
+  "homepage": "https://github.com/pandarinadh/AssessmentManager#readme",
+  "description": ""
 }

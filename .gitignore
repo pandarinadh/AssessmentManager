@@ -1,1 +1,4 @@
 node_modules
+dist/scripts/bundle.js
+package.json
+package-lock.json

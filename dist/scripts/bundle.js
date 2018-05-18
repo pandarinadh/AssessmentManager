@@ -9848,7 +9848,7 @@ return jQuery;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.5';
+  var VERSION = '4.17.10';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -10272,6 +10272,14 @@ return jQuery;
   /** Used to access faster Node.js helpers. */
   var nodeUtil = (function() {
     try {
+      // Use `util.types` for Node.js 10+.
+      var types = freeModule && freeModule.require && freeModule.require('util').types;
+
+      if (types) {
+        return types;
+      }
+
+      // Legacy `process.binding('util')` for Node.js < 10.
       return freeProcess && freeProcess.binding && freeProcess.binding('util');
     } catch (e) {}
   }());
@@ -50290,7 +50298,7 @@ var AssessmentActions = {
 
 module.exports = AssessmentActions;
 
-},{"../api/assessmentApi":209,"../constants/actionTypes":230,"../dispatcher/appDispatcher":231}],205:[function(require,module,exports){
+},{"../api/assessmentApi":209,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],205:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50310,7 +50318,7 @@ var AssessmentCenterActions = {
 
 module.exports = AssessmentCenterActions;
 
-},{"../api/assessmentCenterApi":210,"../constants/actionTypes":230,"../dispatcher/appDispatcher":231}],206:[function(require,module,exports){
+},{"../api/assessmentCenterApi":210,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],206:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50338,7 +50346,7 @@ var InitializeActions = {
 
 module.exports = InitializeActions;
 
-},{"../api/assessmentApi":209,"../api/assessmentCenterApi":210,"../api/questionApi":211,"../api/studentApi":212,"../constants/actionTypes":230,"../dispatcher/appDispatcher":231}],207:[function(require,module,exports){
+},{"../api/assessmentApi":209,"../api/assessmentCenterApi":210,"../api/questionApi":211,"../api/studentApi":212,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],207:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50367,7 +50375,7 @@ var QuestionActions = {
 
 module.exports = QuestionActions;
 
-},{"../api/questionApi":211,"../constants/actionTypes":230,"../dispatcher/appDispatcher":231}],208:[function(require,module,exports){
+},{"../api/questionApi":211,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],208:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50396,12 +50404,13 @@ var StudentActions = {
 
 module.exports = StudentActions;
 
-},{"../api/studentApi":212,"../constants/actionTypes":230,"../dispatcher/appDispatcher":231}],209:[function(require,module,exports){
+},{"../api/studentApi":212,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],209:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
+var Common = require("./../constants/Common");
 
-var apiUrl = "http://localhost:90/api/assessment/";
+var apiUrl = Common.APIUrl + "assessment/";
 
 var AssessmentApi = {
     getString: function(){
@@ -50483,12 +50492,13 @@ var AssessmentApi = {
 };
 
 module.exports = AssessmentApi;
-},{"react":202}],210:[function(require,module,exports){
+},{"./../constants/Common":230,"react":202}],210:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
+var Common = require("./../constants/Common");
 
-var apiUrl = "http://localhost:90/api/AssesssmentCenter/";
+var apiUrl = Common.APIUrl + "AssesssmentCenter/";
 
 var AssessmentApi = {
     getString: function(){
@@ -50570,12 +50580,13 @@ var AssessmentApi = {
 };
 
 module.exports = AssessmentApi;
-},{"react":202}],211:[function(require,module,exports){
+},{"./../constants/Common":230,"react":202}],211:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
+var Common = require("./../constants/Common");
 
-var apiUrl = "http://localhost:90/api/Question/";
+var apiUrl = Common.APIUrl + "Question/";
 
 var QuestionApi = {
     getString: function(){
@@ -50657,12 +50668,13 @@ var QuestionApi = {
 };
 
 module.exports = QuestionApi;
-},{"react":202}],212:[function(require,module,exports){
+},{"./../constants/Common":230,"react":202}],212:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
+var Common = require("./../constants/Common");
 
-var apiUrl = "http://localhost:90/api/student/";
+var apiUrl = Common.APIUrl + "student/";
 
 var StudentApi = {
     getString: function(){
@@ -50744,7 +50756,7 @@ var StudentApi = {
 };
 
 module.exports = StudentApi;
-},{"react":202}],213:[function(require,module,exports){
+},{"./../constants/Common":230,"react":202}],213:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50845,7 +50857,7 @@ var AssessmentCenterPage = React.createClass({displayName: "AssessmentCenterPage
 });
 
 module.exports = AssessmentCenterPage;
-},{"../../store/assessmentCenterStore":234,"./assessmentCenterList":213,"react":202,"react-router":33}],215:[function(require,module,exports){
+},{"../../store/assessmentCenterStore":235,"./assessmentCenterList":213,"react":202,"react-router":33}],215:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51131,7 +51143,7 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
 
 module.exports = StudentAssessmentPage;
 
-},{"../../store/assessmentCenterStore":234,"../../store/assessmentStore":235,"./../../actions/assessmentCenterActions":205,"./assessmentCenterList":213,"lodash":6,"react":202,"react-router":33}],216:[function(require,module,exports){
+},{"../../store/assessmentCenterStore":235,"../../store/assessmentStore":236,"./../../actions/assessmentCenterActions":205,"./assessmentCenterList":213,"lodash":6,"react":202,"react-router":33}],216:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51238,7 +51250,7 @@ var assessmentPage = React.createClass({displayName: "assessmentPage",
 });
 
 module.exports = assessmentPage;
-},{"../../api/assessmentApi":209,"../../store/assessmentStore":235,"./assessmentList":216,"react":202,"react-router":33}],218:[function(require,module,exports){
+},{"../../api/assessmentApi":209,"../../store/assessmentStore":236,"./assessmentList":216,"react":202,"react-router":33}],218:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51339,7 +51351,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 });
 
 module.exports = ManageAssessmentPage;
-},{"../../actions/assessmentActions":204,"../../store/assessmentStore":235,"./../question/questionList":227,"react":202,"react-router":33,"toastr":203}],219:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../store/assessmentStore":236,"./../question/questionList":227,"react":202,"react-router":33,"toastr":203}],219:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51455,7 +51467,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
 });
 
 module.exports = ManageStudentPage;
-},{"../../actions/studentActions":208,"../../store/studentStore":237,"react":202,"react-router":33,"toastr":203}],220:[function(require,module,exports){
+},{"../../actions/studentActions":208,"../../store/studentStore":238,"react":202,"react-router":33,"toastr":203}],220:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51566,7 +51578,7 @@ var StudentPage = React.createClass({displayName: "StudentPage",
 });
 
 module.exports = StudentPage;
-},{"../../store/studentStore":237,"./studentList":220,"react":202,"react-router":33}],222:[function(require,module,exports){
+},{"../../store/studentStore":238,"./studentList":220,"react":202,"react-router":33}],222:[function(require,module,exports){
 /*eslint-disable strict */ //Disabling check because we cant run strict mode. Need global vars
 
 var React = require("react");
@@ -51691,7 +51703,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 });
 
 module.exports = ManageAssessmentPage;
-},{"../../actions/assessmentActions":204,"../../store/assessmentStore":235,"./../question/questionList":227,"react":202,"react-router":33,"toastr":203}],224:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../store/assessmentStore":236,"./../question/questionList":227,"react":202,"react-router":33,"toastr":203}],224:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51831,7 +51843,7 @@ var ManageQuestionPage = React.createClass({displayName: "ManageQuestionPage",
 });
 
 module.exports = ManageQuestionPage;
-},{"../../actions/questionActions":207,"../../store/questionStore":236,"react":202,"react-router":33,"toastr":203}],227:[function(require,module,exports){
+},{"../../actions/questionActions":207,"../../store/questionStore":237,"react":202,"react-router":33,"toastr":203}],227:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51988,7 +52000,7 @@ module.exports = questionPage;
         });*/
    // }
   //  },
-},{"../../store/questionStore":236,"./questionList":227,"react":202,"react-router":33}],229:[function(require,module,exports){
+},{"../../store/questionStore":237,"./questionList":227,"react":202,"react-router":33}],229:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52104,7 +52116,17 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
 });
 
 module.exports = ManageStudentPage;
-},{"../../actions/studentActions":208,"../../store/studentStore":237,"react":202,"react-router":33,"toastr":203}],230:[function(require,module,exports){
+},{"../../actions/studentActions":208,"../../store/studentStore":238,"react":202,"react-router":33,"toastr":203}],230:[function(require,module,exports){
+"use strict";
+
+
+var Common = {
+    APIUrl: "http://localhost:90/api/"
+};
+
+module.exports = Common;
+
+},{}],231:[function(require,module,exports){
 "use strict";
 
 var keyMirror = require("react/lib/keyMirror");
@@ -52121,12 +52143,12 @@ module.exports = keyMirror({
     CREATE_STUDENT_ASSESSMENT: null
 });
 
-},{"react/lib/keyMirror":187}],231:[function(require,module,exports){
+},{"react/lib/keyMirror":187}],232:[function(require,module,exports){
 var Dispatcher = require("flux").Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":2}],232:[function(require,module,exports){
+},{"flux":2}],233:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52139,7 +52161,7 @@ InitializeActions.initApp();
 Router.run(routes, function(Handler){ //Router.HistoryLocation, removed from args
     React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
-},{"./actions/initializeActions":206,"./routes":233,"react":202,"react-router":33}],233:[function(require,module,exports){
+},{"./actions/initializeActions":206,"./routes":234,"react":202,"react-router":33}],234:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52167,7 +52189,7 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/Assessment/assessmentPage":217,"./components/Assessment/manageAssessment":218,"./components/AssessmentCenter/assessmentCenterPage":214,"./components/AssessmentCenter/studentAssessmentPage":215,"./components/Student/manageStudent":219,"./components/Student/studentPage":221,"./components/app":222,"./components/assessment/manageAssessment":223,"./components/homePage":225,"./components/question/manageQuestion":226,"./components/question/questionPage":228,"./components/student/manageStudent":229,"react":202,"react-router":33}],234:[function(require,module,exports){
+},{"./components/Assessment/assessmentPage":217,"./components/Assessment/manageAssessment":218,"./components/AssessmentCenter/assessmentCenterPage":214,"./components/AssessmentCenter/studentAssessmentPage":215,"./components/Student/manageStudent":219,"./components/Student/studentPage":221,"./components/app":222,"./components/assessment/manageAssessment":223,"./components/homePage":225,"./components/question/manageQuestion":226,"./components/question/questionPage":228,"./components/student/manageStudent":229,"react":202,"react-router":33}],235:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52242,7 +52264,7 @@ Dispatcher.register(function(action){
 
 module.exports = AssessmentCenterStore;
 
-},{"../constants/actionTypes":230,"../dispatcher/appDispatcher":231,"events":1,"lodash":6,"object-assign":7}],235:[function(require,module,exports){
+},{"../constants/actionTypes":231,"../dispatcher/appDispatcher":232,"events":1,"lodash":6,"object-assign":7}],236:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52319,7 +52341,7 @@ Dispatcher.register(function(action){
 
 module.exports = AssessmentStore;
 
-},{"../constants/actionTypes":230,"../dispatcher/appDispatcher":231,"events":1,"lodash":6,"object-assign":7}],236:[function(require,module,exports){
+},{"../constants/actionTypes":231,"../dispatcher/appDispatcher":232,"events":1,"lodash":6,"object-assign":7}],237:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52396,7 +52418,7 @@ Dispatcher.register(function(action){
 
 module.exports = QuestionStore;
 
-},{"../constants/actionTypes":230,"../dispatcher/appDispatcher":231,"events":1,"lodash":6,"object-assign":7}],237:[function(require,module,exports){
+},{"../constants/actionTypes":231,"../dispatcher/appDispatcher":232,"events":1,"lodash":6,"object-assign":7}],238:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52471,4 +52493,4 @@ Dispatcher.register(function(action){
 
 module.exports = StudentStore;
 
-},{"../constants/actionTypes":230,"../dispatcher/appDispatcher":231,"events":1,"lodash":6,"object-assign":7}]},{},[232]);
+},{"../constants/actionTypes":231,"../dispatcher/appDispatcher":232,"events":1,"lodash":6,"object-assign":7}]},{},[233]);
