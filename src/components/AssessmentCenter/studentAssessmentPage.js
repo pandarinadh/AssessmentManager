@@ -1,7 +1,8 @@
 "use strict";
 
 var React = require("react");
-var Link = require("react-router").Link;
+var Router = require("react-router");
+var Link = Router.Link;
 var AssessmentCenterList = require("./assessmentCenterList");
 var AssessmentCenterStore = require("../../store/assessmentCenterStore");
 var AssessmentCenterActions = require("./../../actions/assessmentCenterActions");
@@ -9,6 +10,9 @@ var AssessmentStore = require("../../store/assessmentStore");
 var _ = require("lodash");
 
 var StudentAssessmentPage = React.createClass({
+    mixins: [
+        Router.Navigation
+    ],
 
     getInitialState: function() {
         console.log('getInitialState in AssessmentCenterPage');
@@ -22,7 +26,7 @@ var StudentAssessmentPage = React.createClass({
             studentAssessment: localstudentAssessment ? localstudentAssessment : {},
             assessment: localAssessment ? localAssessment : {},
             errors: {},
-            dirty: false,
+            dirty: true,
             questionId: randomValue,
             question: localAssessment ? localAssessment.Questions[randomValue] : {},
             anweredQuestions: [],
@@ -53,10 +57,17 @@ var StudentAssessmentPage = React.createClass({
         }
     },
 
+    statics: {
+        willTransitionFrom: function(transition, component){
+            if(component.state.dirty && !confirm("Are you sure, you want to leave?")){
+                transition.abort();
+            }
+        }
+    },
+
     componentDidMount: function() {
         //debugger;
         this.timerID = setInterval(this.tick, 1000);
-        
     },
 
     componentWillMount: function() {
@@ -89,9 +100,8 @@ var StudentAssessmentPage = React.createClass({
     },
 
     tick: function() {
-
         if(this.state.done !== 'block'){
-            if(this.state.counter < 1){
+            if(this.state.counter < 2){
                 this.processAnswer();
             }
         
@@ -99,6 +109,9 @@ var StudentAssessmentPage = React.createClass({
             date: new Date(),
             counter: --this.state.counter
             });
+        }
+        else {
+            clearInterval(this.timerID);
         }
       },
 
@@ -123,6 +136,7 @@ var StudentAssessmentPage = React.createClass({
             if(randomValue === -1) { 
             
                 AssessmentCenterActions.saveStudetnAssessment(this.state.studentAssessment);
+                this.setState({dirty: false});
                 return; 
             }
 
@@ -132,7 +146,8 @@ var StudentAssessmentPage = React.createClass({
                 question: this.state.assessment.Questions[randomValue],
                 answerValue: false,
                 defaultChecked: "",
-                counter: 10
+                counter: 10,
+                dirty: true
             });
         }
       },
@@ -195,19 +210,19 @@ var StudentAssessmentPage = React.createClass({
         var createAnsweredQuetionRow = function(answeredQuetion){
             var answer = answeredQuetion.Score && answeredQuetion.Score.Answer === 1 ? 'Answered' : 'Not Answered'; 
             var answerColor = answeredQuetion.Score && answeredQuetion.Score.Answer === 1 ? 'green' : 'red';
-
-
             return (
-                <div>
+                <div key={answeredQuetion.Id}>
                     <div className="row" style={{color: 'black', paddingBottom: '10', paddingTop: '10'}}>
-                    {answeredQuetion.Id}. {answeredQuetion.Text}
+                        <div className="col-lg-12">
+                            {answeredQuetion.Id}. {answeredQuetion.Text}
+                        </div>
                     </div>
                     <div className="row" style={{color: 'black'}}>
                         <div className="col-lg-3">
                             <li>{answer}</li>
                         </div>
                         <div className="col-lg-9">
-                            <div class="well" style={{'background-color': answerColor, border: '2px solid silver'}}>&nbsp;</div>
+                            <div className="well well-sm" style={{background: answerColor}}>&nbsp;</div>
                         </div>
                     </div>
                 </div>    
@@ -233,7 +248,7 @@ var StudentAssessmentPage = React.createClass({
                             <div className="row">
                                 <div className="col-lg-5" style={{color: 'black', border: '2px solid silver', textAlign: 'center', height: '350', paddingTop: '100'}}>
                                     <div style={{display: displayDoneValue}}>
-                                        <div className="row">
+                                        <div className="row" style= {{height: '70'}}>
                                             <div style={{paddingBottom: '10' }}>
                                                 {this.state.question.Id}. {this.state.question.Text}
                                             </div>
@@ -242,19 +257,30 @@ var StudentAssessmentPage = React.createClass({
                                                 
                                         </div>
                                             <div className="row">
+                                                    <div className="col-lg-1">
+                                                        &nbsp;
+                                                    </div>
                                                     <div className="col-lg-6" style={{textAlign: 'right' }} onChange={this.setAnswer.bind(this, this)} >
-                                                        <input type="radio" value="Yes" name="Answer" checked={this.state.defaultChecked === "Yes"}>Yes</input>
+                                                        <input type="radio" value="Yes" name="Answer" checked={this.state.defaultChecked === "Yes"}>Yes</input> &nbsp;&nbsp;
                                                         <input type="radio" value="No" name="Answer" checked={this.state.defaultChecked === "No"}>No</input>
                                                     </div>
                                             </div>
                                             <div className="row" style={{paddingTop: '20'}}>
-                                                    <div className="col-lg-2" style={{textAlign: 'right' }}>
+                                                    <div className="col-lg-1">
+                                                        &nbsp;
+                                                    </div>
+                                                    <div className="col-lg-10" style={{textAlign: 'center'}}>
+                                                        <button type="button" className="btn btn-primary btn-sm btn-block" onClick={this.sumbitAnswer.bind(this, this)}>Answer</button>
+                                                    </div>
+                                            </div>
+                                            <div className="row" style={{paddingTop: '20', border: '2px solid silver', display: 'none'}}>
+                                                    <div className="col-lg-2" style={{textAlign: 'right', border: '2px solid silver' }}>
                                                         <input type="button" value="<<<" onClick={this.getQuestion.bind(this, this)}/>
                                                     </div>
-                                                    <div className="col-lg-2" style={{textAlign: 'right' }}>
-                                                        <input type="submit" onClick={this.sumbitAnswer.bind(this, this)}/>
+                                                    <div className="col-lg-5" style={{textAlign: 'right' }}>
+                                                        <button type="button" className="btn btn-primary btn-sm btn-block" onClick={this.sumbitAnswer.bind(this, this)}>Answer</button>
                                                     </div>
-                                                    <div className="col-lg-2" style={{textAlign: 'left' }}>
+                                                    <div className="col-lg-1" style={{textAlign: 'left' }}>
                                                         <input type="submit" value=">>>" onClick={this.getQuestion.bind(this, this)}/>
                                                     </div>
                                             </div>
@@ -269,7 +295,6 @@ var StudentAssessmentPage = React.createClass({
                                 <div className="col-lg-1">
                                     &nbsp;
                                 </div>
-                                
                                 <div className="col-lg-5" style={{border: '2px solid silver', paddingTop: '5', paddingBottom: '5', display: displayValue}}>
                                     {this.state.anweredQuestions.sort().map(createAnsweredQuetionRow, this)}
                                 </div>

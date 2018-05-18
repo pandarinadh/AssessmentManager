@@ -18,25 +18,22 @@
               "Id": 1,
               "Text": "Doctor/health provider talked about reasons you might want your child to take a medicine",
               "Description": "Doctor/health provider talked about reasons you might want your child to take a medicine",
-              "Score": null
+              "Score": {
+                "Id": 0,
+                "Answer": 1
+              }
             },
             {
               "Id": 7,
               "Text": "Child's personal doctor showed respect for what you had to say",
               "Description": "Child's personal doctor showed respect for what you had to say",
-              "Score": {
-                "Id": 0,
-                "Answer": 1
-              }
+              "Score": null
             },
             {
               "Id": 4,
               "Text": "Ease of getting necessary care, tests, or treatment child needed",
               "Description": "Ease of getting necessary care, tests, or treatment child needed",
-              "Score": {
-                "Id": 0,
-                "Answer": 1
-              }
+              "Score": null
             },
             {
               "Id": 10,
@@ -57,19 +54,13 @@
               "Id": 6,
               "Text": "Child's personal doctor listened carefully to you",
               "Description": "Child's personal doctor listened carefully to you",
-              "Score": {
-                "Id": 0,
-                "Answer": 0
-              }
+              "Score": null
             },
             {
               "Id": 2,
               "Text": "Doctor/health provider talked about reasons you might not want your child to take a medicine",
               "Description": "Doctor/health provider talked about reasons you might not want your child to take a medicine",
-              "Score": {
-                "Id": 0,
-                "Answer": 1
-              }
+              "Score": null
             },
             {
               "Id": 3,
@@ -87,7 +78,10 @@
               "Id": 8,
               "Text": "Getting child's appointments with specialists as soon as needed",
               "Description": "Getting child's appointments with specialists as soon as needed",
-              "Score": null
+              "Score": {
+                "Id": 0,
+                "Answer": 1
+              }
             }
           ]
         }

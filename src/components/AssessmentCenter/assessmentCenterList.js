@@ -17,10 +17,9 @@ var AssessmentCenterListPage = React.createClass({
                      <tr key={studentAssessment.Student.Id}>
                                 <td>{studentAssessment.Student.Id}</td>
                                 <td>{studentAssessment.Student.Name}</td>
-                                <td>{studentAssessment.Student.Assessments.map(function (assessment) {
+                                <td>{studentAssessment.Student.Assessments.map(function (assessment, index) {
                                     return (
-                                        
-                                        <li><Link to="studentAssessmentPage" params={{assessmentId: assessment.Id, studentId: studentAssessment.Student.Id}} >{assessment.Text}</Link></li>
+                                        <li key={index}><Link to="studentAssessmentPage" params={{assessmentId: assessment.Id, studentId: studentAssessment.Student.Id}} >{assessment.Text}</Link></li>
                                     );
                                 }
                                 )}</td>
