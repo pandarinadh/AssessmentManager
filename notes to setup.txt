@@ -1,3 +1,5 @@
+type "gulp" to start the project
+c:/my/Practice/AssessmentManager
 1. npm init
 cat package.json
 2. npm install --save gulp@3.9.0 gulp-connect@2.2.0 gulp-open@1.0.0
@@ -29,4 +31,4 @@ data: bit.ly/mockcoursedata
 npm install axios
 
 c:/my/Practice/ns-question/node-questionBankFlux
-C:/my/Practice/AssessmentManager
+c:/my/Practice/AssessmentManager

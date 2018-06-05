@@ -9,11 +9,14 @@ var QuestionAction = require("../../actions/questionActions");
 var QuestionListPage = React.createClass({
     deleteQuestion: function(id, event){
         // debugger;
+        event.preventDefault();
+        if(confirm("Are you sure?")){
         console.log("id" + id);
-         event.preventDefault();
+        
          QuestionAction.deleteQuestion(id);
 
          Toastr.success("question Deleted");
+        }
      },
 
 

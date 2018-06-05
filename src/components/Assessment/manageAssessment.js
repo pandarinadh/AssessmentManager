@@ -7,6 +7,7 @@ var Toastr = require("toastr");
 var AssessmentStore = require("../../store/assessmentStore");
 var AssessmentActions = require("../../actions/assessmentActions");
 var QuestionList = require("./../question/questionList");
+var AssessmentForm = require("./AssessmentForm");
 
 var ManageAssessmentPage = React.createClass({
     mixins: [
@@ -15,8 +16,13 @@ var ManageAssessmentPage = React.createClass({
 
     getInitialState: function(){
         console.log('getInitialState');
+        var localAssessment = {Id: '', Text: '', Description: '', Questions: []};
+        var assessmentId = this.props.params.id;
+        if(assessmentId){
+            localAssessment = AssessmentStore.getAssessmentById(assessmentId);
+        }
         return {
-            assessment: {Id: '', Text: '', Description: '', Questions: []},
+            assessment: localAssessment,
             showId: false
         };
     },
@@ -28,8 +34,22 @@ var ManageAssessmentPage = React.createClass({
         if(assessmentId){
             this.setState({ assessment: AssessmentStore.getAssessmentById(assessmentId), showId: true });
         }
-  },
 
+        AssessmentStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function(){
+
+        AssessmentStore.addChangeListener(this._onChange);
+    },
+
+    _onChange: function(){
+        //debugger;
+        console.log('onchange in ManageAssessmentPage');
+        var assessmentId = this.props.params.id;
+        if(assessmentId){
+            this.setState({assessment: AssessmentStore.getAssessmentById(assessmentId), showId: true });
+        }
+    },
     setAssessmentState: function (event) {
         var field = event.target.name;
         var value = event.target.value;
@@ -48,41 +68,19 @@ var ManageAssessmentPage = React.createClass({
 
     render: function(){
 
-        var myStyle = this.state.showId ? 'inline' : 'none';
+      
+        var questionList = this.state.assessment ? this.state.assessment.Questions : [];
+        
+        var localAssessment = {Id: '', Text: '', Description: '', Questions: []};
+        
+        if(this.state.assessment){
+            localAssessment = this.state.assessment;
+        }
 
         return (
             <div>
                 <h1>Manage Assessment</h1>
-                <div style= {{display: myStyle}}>
-                    <div className="form-group">
-                        <div>
-                            <label htmlFor="assessment">Id </label>
-                            <div className="field">
-                                <input type="text" name="Text" readOnly value={this.state.assessment.Id} className="form-control" onChange={this.setAssessmentState} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="assessment">Assessment </label>
-                        <div className="field">
-                            <input type="text" name="Text" value={this.state.assessment.Text} className="form-control" onChange={this.setAssessmentState} />
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="description">Description</label>
-                        <div className="field">
-                            <input type="text" name="Description" value={this.state.assessment.Description} className="form-control" onChange={this.setAssessmentState} />
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <input type="submit" value="Save Assessment" className="btn btn-default" onClick={this.saveAssessment} />
-                    <Link to="assessments" className="btn btn-default">Cancel</Link>
-                </div>
+                <AssessmentForm assessment = {localAssessment} onSave = {this.state.saveAssessment} onChange={this.setAssessmentState} showId = {this.state.showId}/>
 
                 <div className="Row">
                     <div className="col-xs-10">
@@ -90,7 +88,7 @@ var ManageAssessmentPage = React.createClass({
                     </div>
                 </div>
                 <div className="Row">
-                    <QuestionList questions = {this.state.assessment.Questions} />
+                    <QuestionList questions = {questionList} />
                  </div>
             </div>
         );

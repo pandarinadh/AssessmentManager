@@ -50298,7 +50298,7 @@ var AssessmentActions = {
 
 module.exports = AssessmentActions;
 
-},{"../api/assessmentApi":209,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],205:[function(require,module,exports){
+},{"../api/assessmentApi":209,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],205:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50318,7 +50318,7 @@ var AssessmentCenterActions = {
 
 module.exports = AssessmentCenterActions;
 
-},{"../api/assessmentCenterApi":210,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],206:[function(require,module,exports){
+},{"../api/assessmentCenterApi":210,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],206:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50346,7 +50346,7 @@ var InitializeActions = {
 
 module.exports = InitializeActions;
 
-},{"../api/assessmentApi":209,"../api/assessmentCenterApi":210,"../api/questionApi":211,"../api/studentApi":212,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],207:[function(require,module,exports){
+},{"../api/assessmentApi":209,"../api/assessmentCenterApi":210,"../api/questionApi":211,"../api/studentApi":212,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],207:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50375,7 +50375,7 @@ var QuestionActions = {
 
 module.exports = QuestionActions;
 
-},{"../api/questionApi":211,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],208:[function(require,module,exports){
+},{"../api/questionApi":211,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],208:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50404,7 +50404,7 @@ var StudentActions = {
 
 module.exports = StudentActions;
 
-},{"../api/studentApi":212,"../constants/actionTypes":231,"../dispatcher/appDispatcher":232}],209:[function(require,module,exports){
+},{"../api/studentApi":212,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],209:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50492,7 +50492,7 @@ var AssessmentApi = {
 };
 
 module.exports = AssessmentApi;
-},{"./../constants/Common":230,"react":202}],210:[function(require,module,exports){
+},{"./../constants/Common":233,"react":202}],210:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50580,7 +50580,7 @@ var AssessmentApi = {
 };
 
 module.exports = AssessmentApi;
-},{"./../constants/Common":230,"react":202}],211:[function(require,module,exports){
+},{"./../constants/Common":233,"react":202}],211:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50668,7 +50668,7 @@ var QuestionApi = {
 };
 
 module.exports = QuestionApi;
-},{"./../constants/Common":230,"react":202}],212:[function(require,module,exports){
+},{"./../constants/Common":233,"react":202}],212:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50756,7 +50756,7 @@ var StudentApi = {
 };
 
 module.exports = StudentApi;
-},{"./../constants/Common":230,"react":202}],213:[function(require,module,exports){
+},{"./../constants/Common":233,"react":202}],213:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50776,10 +50776,9 @@ var AssessmentCenterListPage = React.createClass({displayName: "AssessmentCenter
                      React.createElement("tr", {key: studentAssessment.Student.Id}, 
                                 React.createElement("td", null, studentAssessment.Student.Id), 
                                 React.createElement("td", null, studentAssessment.Student.Name), 
-                                React.createElement("td", null, studentAssessment.Student.Assessments.map(function (assessment) {
+                                React.createElement("td", null, studentAssessment.Student.Assessments.map(function (assessment, index) {
                                     return (
-                                        
-                                        React.createElement("li", null, React.createElement(Link, {to: "studentAssessmentPage", params: {assessmentId: assessment.Id, studentId: studentAssessment.Student.Id}}, assessment.Text))
+                                        React.createElement("li", {key: index}, React.createElement(Link, {to: "studentAssessmentPage", params: {assessmentId: assessment.Id, studentId: studentAssessment.Student.Id}}, assessment.Text))
                                     );
                                 }
                                 ))
@@ -50857,11 +50856,12 @@ var AssessmentCenterPage = React.createClass({displayName: "AssessmentCenterPage
 });
 
 module.exports = AssessmentCenterPage;
-},{"../../store/assessmentCenterStore":235,"./assessmentCenterList":213,"react":202,"react-router":33}],215:[function(require,module,exports){
+},{"../../store/assessmentCenterStore":238,"./assessmentCenterList":213,"react":202,"react-router":33}],215:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
-var Link = require("react-router").Link;
+var Router = require("react-router");
+var Link = Router.Link;
 var AssessmentCenterList = require("./assessmentCenterList");
 var AssessmentCenterStore = require("../../store/assessmentCenterStore");
 var AssessmentCenterActions = require("./../../actions/assessmentCenterActions");
@@ -50869,6 +50869,9 @@ var AssessmentStore = require("../../store/assessmentStore");
 var _ = require("lodash");
 
 var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPage",
+    mixins: [
+        Router.Navigation
+    ],
 
     getInitialState: function() {
         console.log('getInitialState in AssessmentCenterPage');
@@ -50882,7 +50885,7 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
             studentAssessment: localstudentAssessment ? localstudentAssessment : {},
             assessment: localAssessment ? localAssessment : {},
             errors: {},
-            dirty: false,
+            dirty: true,
             questionId: randomValue,
             question: localAssessment ? localAssessment.Questions[randomValue] : {},
             anweredQuestions: [],
@@ -50913,10 +50916,17 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
         }
     },
 
+    statics: {
+        willTransitionFrom: function(transition, component){
+            if(component.state.dirty && !confirm("Are you sure, you want to leave?")){
+                transition.abort();
+            }
+        }
+    },
+
     componentDidMount: function() {
         //debugger;
         this.timerID = setInterval(this.tick, 1000);
-        
     },
 
     componentWillMount: function() {
@@ -50949,9 +50959,8 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
     },
 
     tick: function() {
-
         if(this.state.done !== 'block'){
-            if(this.state.counter < 1){
+            if(this.state.counter < 2){
                 this.processAnswer();
             }
         
@@ -50959,6 +50968,9 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
             date: new Date(),
             counter: --this.state.counter
             });
+        }
+        else {
+            clearInterval(this.timerID);
         }
       },
 
@@ -50983,6 +50995,7 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
             if(randomValue === -1) { 
             
                 AssessmentCenterActions.saveStudetnAssessment(this.state.studentAssessment);
+                this.setState({dirty: false});
                 return; 
             }
 
@@ -50992,7 +51005,8 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
                 question: this.state.assessment.Questions[randomValue],
                 answerValue: false,
                 defaultChecked: "",
-                counter: 10
+                counter: 10,
+                dirty: true
             });
         }
       },
@@ -51055,19 +51069,19 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
         var createAnsweredQuetionRow = function(answeredQuetion){
             var answer = answeredQuetion.Score && answeredQuetion.Score.Answer === 1 ? 'Answered' : 'Not Answered'; 
             var answerColor = answeredQuetion.Score && answeredQuetion.Score.Answer === 1 ? 'green' : 'red';
-
-
             return (
-                React.createElement("div", null, 
+                React.createElement("div", {key: answeredQuetion.Id}, 
                     React.createElement("div", {className: "row", style: {color: 'black', paddingBottom: '10', paddingTop: '10'}}, 
-                    answeredQuetion.Id, ". ", answeredQuetion.Text
+                        React.createElement("div", {className: "col-lg-12"}, 
+                            answeredQuetion.Id, ". ", answeredQuetion.Text
+                        )
                     ), 
                     React.createElement("div", {className: "row", style: {color: 'black'}}, 
                         React.createElement("div", {className: "col-lg-3"}, 
                             React.createElement("li", null, answer)
                         ), 
                         React.createElement("div", {className: "col-lg-9"}, 
-                            React.createElement("div", {class: "well", style: {'background-color': answerColor, border: '2px solid silver'}}, " ")
+                            React.createElement("div", {className: "well well-sm", style: {background: answerColor}}, " ")
                         )
                     )
                 )    
@@ -51093,7 +51107,7 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
                             React.createElement("div", {className: "row"}, 
                                 React.createElement("div", {className: "col-lg-5", style: {color: 'black', border: '2px solid silver', textAlign: 'center', height: '350', paddingTop: '100'}}, 
                                     React.createElement("div", {style: {display: displayDoneValue}}, 
-                                        React.createElement("div", {className: "row"}, 
+                                        React.createElement("div", {className: "row", style: {height: '70'}}, 
                                             React.createElement("div", {style: {paddingBottom: '10'}}, 
                                                 this.state.question.Id, ". ", this.state.question.Text
                                             )
@@ -51102,19 +51116,30 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
                                                 
                                         ), 
                                             React.createElement("div", {className: "row"}, 
+                                                    React.createElement("div", {className: "col-lg-1"}, 
+                                                        " "
+                                                    ), 
                                                     React.createElement("div", {className: "col-lg-6", style: {textAlign: 'right'}, onChange: this.setAnswer.bind(this, this)}, 
-                                                        React.createElement("input", {type: "radio", value: "Yes", name: "Answer", checked: this.state.defaultChecked === "Yes"}, "Yes"), 
+                                                        React.createElement("input", {type: "radio", value: "Yes", name: "Answer", checked: this.state.defaultChecked === "Yes"}, "Yes"), "   ", 
                                                         React.createElement("input", {type: "radio", value: "No", name: "Answer", checked: this.state.defaultChecked === "No"}, "No")
                                                     )
                                             ), 
                                             React.createElement("div", {className: "row", style: {paddingTop: '20'}}, 
-                                                    React.createElement("div", {className: "col-lg-2", style: {textAlign: 'right'}}, 
+                                                    React.createElement("div", {className: "col-lg-1"}, 
+                                                        " "
+                                                    ), 
+                                                    React.createElement("div", {className: "col-lg-10", style: {textAlign: 'center'}}, 
+                                                        React.createElement("button", {type: "button", className: "btn btn-primary btn-sm btn-block", onClick: this.sumbitAnswer.bind(this, this)}, "Answer")
+                                                    )
+                                            ), 
+                                            React.createElement("div", {className: "row", style: {paddingTop: '20', border: '2px solid silver', display: 'none'}}, 
+                                                    React.createElement("div", {className: "col-lg-2", style: {textAlign: 'right', border: '2px solid silver'}}, 
                                                         React.createElement("input", {type: "button", value: "<<<", onClick: this.getQuestion.bind(this, this)})
                                                     ), 
-                                                    React.createElement("div", {className: "col-lg-2", style: {textAlign: 'right'}}, 
-                                                        React.createElement("input", {type: "submit", onClick: this.sumbitAnswer.bind(this, this)})
+                                                    React.createElement("div", {className: "col-lg-5", style: {textAlign: 'right'}}, 
+                                                        React.createElement("button", {type: "button", className: "btn btn-primary btn-sm btn-block", onClick: this.sumbitAnswer.bind(this, this)}, "Answer")
                                                     ), 
-                                                    React.createElement("div", {className: "col-lg-2", style: {textAlign: 'left'}}, 
+                                                    React.createElement("div", {className: "col-lg-1", style: {textAlign: 'left'}}, 
                                                         React.createElement("input", {type: "submit", value: ">>>", onClick: this.getQuestion.bind(this, this)})
                                                     )
                                             )
@@ -51129,7 +51154,6 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
                                 React.createElement("div", {className: "col-lg-1"}, 
                                     " "
                                 ), 
-                                
                                 React.createElement("div", {className: "col-lg-5", style: {border: '2px solid silver', paddingTop: '5', paddingBottom: '5', display: displayValue}}, 
                                     this.state.anweredQuestions.sort().map(createAnsweredQuetionRow, this)
                                 )
@@ -51143,7 +51167,57 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
 
 module.exports = StudentAssessmentPage;
 
-},{"../../store/assessmentCenterStore":235,"../../store/assessmentStore":236,"./../../actions/assessmentCenterActions":205,"./assessmentCenterList":213,"lodash":6,"react":202,"react-router":33}],216:[function(require,module,exports){
+},{"../../store/assessmentCenterStore":238,"../../store/assessmentStore":239,"./../../actions/assessmentCenterActions":205,"./assessmentCenterList":213,"lodash":6,"react":202,"react-router":33}],216:[function(require,module,exports){
+"use strict";
+
+var React = require("react");
+var Router = require("react-router");
+var Link = Router.Link;
+
+var AssessmentForm = React.createClass({displayName: "AssessmentForm",
+    render: function(){
+        
+        var myStyle = this.props.showId ? 'inline' : 'none';
+        return (
+            React.createElement("div", null, 
+                React.createElement("div", {style: {display: myStyle}}, 
+                        React.createElement("div", {className: "form-group"}, 
+                            React.createElement("div", null, 
+                                React.createElement("label", {htmlFor: "assessment"}, "Id "), 
+                                React.createElement("div", {className: "field"}, 
+                                    React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.assessment.Id, className: "form-control", onChange: this.props.onChange})
+                                )
+                            )
+                        )
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("div", null, 
+                            React.createElement("label", {htmlFor: "assessment"}, "Assessment "), 
+                            React.createElement("div", {className: "field"}, 
+                                React.createElement("input", {type: "text", name: "Text", value: this.props.assessment.Text, className: "form-control", onChange: this.props.onChange})
+                            )
+                        )
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("div", null, 
+                            React.createElement("label", {htmlFor: "description"}, "Description"), 
+                            React.createElement("div", {className: "field"}, 
+                                React.createElement("input", {type: "text", name: "Description", value: this.props.assessment.Description, className: "form-control", onChange: this.props.onChange})
+                            )
+                        )
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("input", {type: "submit", value: "Save Assessment", className: "btn btn-default", onClick: this.props.onSave}), 
+                        React.createElement(Link, {to: "assessments", className: "btn btn-default"}, "Cancel")
+                    )
+            )
+        );
+    }
+});
+
+module.exports = AssessmentForm;
+
+},{"react":202,"react-router":33}],217:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51156,11 +51230,12 @@ var AssessmentAction = require("../../actions/assessmentActions");
 var AssessmentListPage = React.createClass({displayName: "AssessmentListPage",
     deleteAssessment: function(id, event){
         // debugger;
-        console.log("id" + id);
-         event.preventDefault();
+        event.preventDefault();
+        if(confirm("Are you sure?")){
          AssessmentAction.deleteAssessment(id);
 
          Toastr.success("assessment Deleted");
+        }
      },
 
 
@@ -51197,7 +51272,7 @@ var AssessmentListPage = React.createClass({displayName: "AssessmentListPage",
 
 module.exports = AssessmentListPage;
 
-},{"../../actions/assessmentActions":204,"../../api/assessmentApi":209,"react":202,"react-router":33,"toastr":203}],217:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../api/assessmentApi":209,"react":202,"react-router":33,"toastr":203}],218:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51250,7 +51325,7 @@ var assessmentPage = React.createClass({displayName: "assessmentPage",
 });
 
 module.exports = assessmentPage;
-},{"../../api/assessmentApi":209,"../../store/assessmentStore":236,"./assessmentList":216,"react":202,"react-router":33}],218:[function(require,module,exports){
+},{"../../api/assessmentApi":209,"../../store/assessmentStore":239,"./assessmentList":217,"react":202,"react-router":33}],219:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51260,6 +51335,7 @@ var Toastr = require("toastr");
 var AssessmentStore = require("../../store/assessmentStore");
 var AssessmentActions = require("../../actions/assessmentActions");
 var QuestionList = require("./../question/questionList");
+var AssessmentForm = require("./AssessmentForm");
 
 var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage",
     mixins: [
@@ -51268,8 +51344,13 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 
     getInitialState: function(){
         console.log('getInitialState');
+        var localAssessment = {Id: '', Text: '', Description: '', Questions: []};
+        var assessmentId = this.props.params.id;
+        if(assessmentId){
+            localAssessment = AssessmentStore.getAssessmentById(assessmentId);
+        }
         return {
-            assessment: {Id: '', Text: '', Description: '', Questions: []},
+            assessment: localAssessment,
             showId: false
         };
     },
@@ -51281,8 +51362,22 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
         if(assessmentId){
             this.setState({ assessment: AssessmentStore.getAssessmentById(assessmentId), showId: true });
         }
-  },
 
+        AssessmentStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function(){
+
+        AssessmentStore.addChangeListener(this._onChange);
+    },
+
+    _onChange: function(){
+        //debugger;
+        console.log('onchange in ManageAssessmentPage');
+        var assessmentId = this.props.params.id;
+        if(assessmentId){
+            this.setState({assessment: AssessmentStore.getAssessmentById(assessmentId), showId: true });
+        }
+    },
     setAssessmentState: function (event) {
         var field = event.target.name;
         var value = event.target.value;
@@ -51301,41 +51396,19 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 
     render: function(){
 
-        var myStyle = this.state.showId ? 'inline' : 'none';
+      
+        var questionList = this.state.assessment ? this.state.assessment.Questions : [];
+        
+        var localAssessment = {Id: '', Text: '', Description: '', Questions: []};
+        
+        if(this.state.assessment){
+            localAssessment = this.state.assessment;
+        }
 
         return (
             React.createElement("div", null, 
                 React.createElement("h1", null, "Manage Assessment"), 
-                React.createElement("div", {style: {display: myStyle}}, 
-                    React.createElement("div", {className: "form-group"}, 
-                        React.createElement("div", null, 
-                            React.createElement("label", {htmlFor: "assessment"}, "Id "), 
-                            React.createElement("div", {className: "field"}, 
-                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.state.assessment.Id, className: "form-control", onChange: this.setAssessmentState})
-                            )
-                        )
-                    )
-                ), 
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("div", null, 
-                        React.createElement("label", {htmlFor: "assessment"}, "Assessment "), 
-                        React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Text", value: this.state.assessment.Text, className: "form-control", onChange: this.setAssessmentState})
-                        )
-                    )
-                ), 
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("div", null, 
-                        React.createElement("label", {htmlFor: "description"}, "Description"), 
-                        React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Description", value: this.state.assessment.Description, className: "form-control", onChange: this.setAssessmentState})
-                        )
-                    )
-                ), 
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {type: "submit", value: "Save Assessment", className: "btn btn-default", onClick: this.saveAssessment}), 
-                    React.createElement(Link, {to: "assessments", className: "btn btn-default"}, "Cancel")
-                ), 
+                React.createElement(AssessmentForm, {assessment: localAssessment, onSave: this.state.saveAssessment, onChange: this.setAssessmentState, showId: this.state.showId}), 
 
                 React.createElement("div", {className: "Row"}, 
                     React.createElement("div", {className: "col-xs-10"}, 
@@ -51343,7 +51416,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
                     )
                 ), 
                 React.createElement("div", {className: "Row"}, 
-                    React.createElement(QuestionList, {questions: this.state.assessment.Questions})
+                    React.createElement(QuestionList, {questions: questionList})
                  )
             )
         );
@@ -51351,7 +51424,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 });
 
 module.exports = ManageAssessmentPage;
-},{"../../actions/assessmentActions":204,"../../store/assessmentStore":236,"./../question/questionList":227,"react":202,"react-router":33,"toastr":203}],219:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../store/assessmentStore":239,"./../question/questionList":230,"./AssessmentForm":216,"react":202,"react-router":33,"toastr":203}],220:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51467,7 +51540,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
 });
 
 module.exports = ManageStudentPage;
-},{"../../actions/studentActions":208,"../../store/studentStore":238,"react":202,"react-router":33,"toastr":203}],220:[function(require,module,exports){
+},{"../../actions/studentActions":208,"../../store/studentStore":241,"react":202,"react-router":33,"toastr":203}],221:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51526,7 +51599,7 @@ var StudentListPage = React.createClass({displayName: "StudentListPage",
 
 module.exports = StudentListPage;
 
-},{"../../actions/studentActions":208,"react":202,"react-router":33,"toastr":203}],221:[function(require,module,exports){
+},{"../../actions/studentActions":208,"react":202,"react-router":33,"toastr":203}],222:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51578,7 +51651,7 @@ var StudentPage = React.createClass({displayName: "StudentPage",
 });
 
 module.exports = StudentPage;
-},{"../../store/studentStore":238,"./studentList":220,"react":202,"react-router":33}],222:[function(require,module,exports){
+},{"../../store/studentStore":241,"./studentList":221,"react":202,"react-router":33}],223:[function(require,module,exports){
 /*eslint-disable strict */ //Disabling check because we cant run strict mode. Need global vars
 
 var React = require("react");
@@ -51602,7 +51675,57 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./common/header":224,"jquery":5,"react":202,"react-router":33}],223:[function(require,module,exports){
+},{"./common/header":226,"jquery":5,"react":202,"react-router":33}],224:[function(require,module,exports){
+"use strict";
+
+var React = require("react");
+var Router = require("react-router");
+var Link = Router.Link;
+
+var AssessmentForm = React.createClass({displayName: "AssessmentForm",
+    render: function(){
+        
+        var myStyle = this.props.showId ? 'inline' : 'none';
+        return (
+            React.createElement("div", null, 
+                React.createElement("div", {style: {display: myStyle}}, 
+                        React.createElement("div", {className: "form-group"}, 
+                            React.createElement("div", null, 
+                                React.createElement("label", {htmlFor: "assessment"}, "Id "), 
+                                React.createElement("div", {className: "field"}, 
+                                    React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.assessment.Id, className: "form-control", onChange: this.props.onChange})
+                                )
+                            )
+                        )
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("div", null, 
+                            React.createElement("label", {htmlFor: "assessment"}, "Assessment "), 
+                            React.createElement("div", {className: "field"}, 
+                                React.createElement("input", {type: "text", name: "Text", value: this.props.assessment.Text, className: "form-control", onChange: this.props.onChange})
+                            )
+                        )
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("div", null, 
+                            React.createElement("label", {htmlFor: "description"}, "Description"), 
+                            React.createElement("div", {className: "field"}, 
+                                React.createElement("input", {type: "text", name: "Description", value: this.props.assessment.Description, className: "form-control", onChange: this.props.onChange})
+                            )
+                        )
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("input", {type: "submit", value: "Save Assessment", className: "btn btn-default", onClick: this.props.onSave}), 
+                        React.createElement(Link, {to: "assessments", className: "btn btn-default"}, "Cancel")
+                    )
+            )
+        );
+    }
+});
+
+module.exports = AssessmentForm;
+
+},{"react":202,"react-router":33}],225:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51612,6 +51735,7 @@ var Toastr = require("toastr");
 var AssessmentStore = require("../../store/assessmentStore");
 var AssessmentActions = require("../../actions/assessmentActions");
 var QuestionList = require("./../question/questionList");
+var AssessmentForm = require("./AssessmentForm");
 
 var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage",
     mixins: [
@@ -51620,8 +51744,13 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 
     getInitialState: function(){
         console.log('getInitialState');
+        var localAssessment = {Id: '', Text: '', Description: '', Questions: []};
+        var assessmentId = this.props.params.id;
+        if(assessmentId){
+            localAssessment = AssessmentStore.getAssessmentById(assessmentId);
+        }
         return {
-            assessment: {Id: '', Text: '', Description: '', Questions: []},
+            assessment: localAssessment,
             showId: false
         };
     },
@@ -51633,8 +51762,22 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
         if(assessmentId){
             this.setState({ assessment: AssessmentStore.getAssessmentById(assessmentId), showId: true });
         }
-  },
 
+        AssessmentStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function(){
+
+        AssessmentStore.addChangeListener(this._onChange);
+    },
+
+    _onChange: function(){
+        //debugger;
+        console.log('onchange in ManageAssessmentPage');
+        var assessmentId = this.props.params.id;
+        if(assessmentId){
+            this.setState({assessment: AssessmentStore.getAssessmentById(assessmentId), showId: true });
+        }
+    },
     setAssessmentState: function (event) {
         var field = event.target.name;
         var value = event.target.value;
@@ -51653,41 +51796,19 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 
     render: function(){
 
-        var myStyle = this.state.showId ? 'inline' : 'none';
+      
+        var questionList = this.state.assessment ? this.state.assessment.Questions : [];
+        
+        var localAssessment = {Id: '', Text: '', Description: '', Questions: []};
+        
+        if(this.state.assessment){
+            localAssessment = this.state.assessment;
+        }
 
         return (
             React.createElement("div", null, 
                 React.createElement("h1", null, "Manage Assessment"), 
-                React.createElement("div", {style: {display: myStyle}}, 
-                    React.createElement("div", {className: "form-group"}, 
-                        React.createElement("div", null, 
-                            React.createElement("label", {htmlFor: "assessment"}, "Id "), 
-                            React.createElement("div", {className: "field"}, 
-                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.state.assessment.Id, className: "form-control", onChange: this.setAssessmentState})
-                            )
-                        )
-                    )
-                ), 
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("div", null, 
-                        React.createElement("label", {htmlFor: "assessment"}, "Assessment "), 
-                        React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Text", value: this.state.assessment.Text, className: "form-control", onChange: this.setAssessmentState})
-                        )
-                    )
-                ), 
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("div", null, 
-                        React.createElement("label", {htmlFor: "description"}, "Description"), 
-                        React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Description", value: this.state.assessment.Description, className: "form-control", onChange: this.setAssessmentState})
-                        )
-                    )
-                ), 
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {type: "submit", value: "Save Assessment", className: "btn btn-default", onClick: this.saveAssessment}), 
-                    React.createElement(Link, {to: "assessments", className: "btn btn-default"}, "Cancel")
-                ), 
+                React.createElement(AssessmentForm, {assessment: localAssessment, onSave: this.state.saveAssessment, onChange: this.setAssessmentState, showId: this.state.showId}), 
 
                 React.createElement("div", {className: "Row"}, 
                     React.createElement("div", {className: "col-xs-10"}, 
@@ -51695,7 +51816,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
                     )
                 ), 
                 React.createElement("div", {className: "Row"}, 
-                    React.createElement(QuestionList, {questions: this.state.assessment.Questions})
+                    React.createElement(QuestionList, {questions: questionList})
                  )
             )
         );
@@ -51703,7 +51824,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 });
 
 module.exports = ManageAssessmentPage;
-},{"../../actions/assessmentActions":204,"../../store/assessmentStore":236,"./../question/questionList":227,"react":202,"react-router":33,"toastr":203}],224:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../store/assessmentStore":239,"./../question/questionList":230,"./AssessmentForm":224,"react":202,"react-router":33,"toastr":203}],226:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51732,7 +51853,7 @@ var Header = React.createClass({displayName: "Header",
 
 module.exports = Header;
 
-},{"react":202,"react-router":33}],225:[function(require,module,exports){
+},{"react":202,"react-router":33}],227:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51751,7 +51872,7 @@ var HomePage = React.createClass({displayName: "HomePage",
 
 module.exports = HomePage;
 
-},{"react":202}],226:[function(require,module,exports){
+},{"react":202}],228:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51760,6 +51881,7 @@ var Link = Router.Link;
 var Toastr = require("toastr");
 var QuestionStore = require("../../store/questionStore");
 var QuestionActions = require("../../actions/questionActions");
+var QuestionForm = require("./questionForm");
 
 var ManageQuestionPage = React.createClass({displayName: "ManageQuestionPage",
     mixins: [
@@ -51767,22 +51889,52 @@ var ManageQuestionPage = React.createClass({displayName: "ManageQuestionPage",
     ],
 
     getInitialState: function(){
-        console.log('getInitialState');
+        console.log('getInitialState ManageQuestionPage');
+        var localQuestion = {Id: '', Text: '', Description: '' };
+        var questionId = this.props.params.id;
+
+        if(questionId){
+            localQuestion = QuestionStore.getQuestionById(questionId);
+        }
+
         return {
-            question: {Id: '', Text: '', Description: '' },
+            question: localQuestion,
             showId: false
         };
     },
 
     componentWillMount: function(){
         var questionId = this.props.params.id;
+        
         var currentComponent = this;
 
         if(questionId){
             this.setState({ question: QuestionStore.getQuestionById(questionId), showId: true });
         }
-  },
 
+        QuestionStore.addChangeListener(this._onChange);
+    },
+
+  componentWillUnmount: function(){
+    var questionId = this.props.params.id;
+    
+    var currentComponent = this;
+
+    if(questionId){
+        this.setState({ question: QuestionStore.getQuestionById(questionId), showId: true });
+    }
+
+    QuestionStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function(){
+    //debugger;
+        console.log('onchange in ManageQuestionPage');
+        var questionId = this.props.params.id;
+        if(questionId){
+            this.setState({question: QuestionStore.getQuestionById(questionId) });
+        }
+    },
     setQuestionState: function (event) {
         var field = event.target.name;
         var value = event.target.value;
@@ -51800,18 +51952,42 @@ var ManageQuestionPage = React.createClass({displayName: "ManageQuestionPage",
     },
 
     render: function(){
-
-        var myStyle = this.state.showId ? 'inline' : 'none';
+        var localQuestion = {Id: '', Text: '', Description: '' };
+        //debugger;
+        if(this.state.question){
+            localQuestion = this.state.question;
+        }
 
         return (
             React.createElement("div", null, 
                 React.createElement("h1", null, "Manage Question"), 
+                React.createElement(QuestionForm, {question: localQuestion, onChange: this.setQuestionState, onSave: this.saveQuestion, showId: this.state.showId})
+            )
+        );
+    }
+});
+
+module.exports = ManageQuestionPage;
+},{"../../actions/questionActions":207,"../../store/questionStore":240,"./questionForm":229,"react":202,"react-router":33,"toastr":203}],229:[function(require,module,exports){
+"use strict";
+
+var React = require("react");
+var Router = require("react-router");
+var Link = Router.Link;
+
+var QuestionForm = React.createClass({displayName: "QuestionForm",
+    render: function(){
+    //debugger;
+        var myStyle = this.props.showId ? 'inline' : 'none';
+
+        return (
+            React.createElement("div", null, 
                 React.createElement("div", {style: {display: myStyle}}, 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("div", null, 
                             React.createElement("label", {htmlFor: "question"}, "Id "), 
                             React.createElement("div", {className: "field"}, 
-                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.state.question.Id, className: "form-control", onChange: this.setQuestionState})
+                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.question.Id, className: "form-control", onChange: this.props.onChange})
                             )
                         )
                     )
@@ -51820,7 +51996,7 @@ var ManageQuestionPage = React.createClass({displayName: "ManageQuestionPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "question"}, "Question "), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Text", value: this.state.question.Text, className: "form-control", onChange: this.setQuestionState})
+                            React.createElement("input", {type: "text", name: "Text", value: this.props.question.Text, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -51828,22 +52004,21 @@ var ManageQuestionPage = React.createClass({displayName: "ManageQuestionPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Description"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Description", value: this.state.question.Description, className: "form-control", onChange: this.setQuestionState})
+                            React.createElement("input", {type: "text", name: "Description", value: this.props.question.Description, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
                 React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {type: "submit", value: "Save Question", className: "btn btn-default", onClick: this.saveQuestion}), 
+                    React.createElement("input", {type: "submit", value: "Save Question", className: "btn btn-default", onClick: this.props.onSave}), 
                     React.createElement(Link, {to: "questions", className: "btn btn-default"}, "Cancel")
                 )
-
-            )
+             )
         );
     }
 });
 
-module.exports = ManageQuestionPage;
-},{"../../actions/questionActions":207,"../../store/questionStore":237,"react":202,"react-router":33,"toastr":203}],227:[function(require,module,exports){
+module.exports = QuestionForm;
+},{"react":202,"react-router":33}],230:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51855,11 +52030,14 @@ var QuestionAction = require("../../actions/questionActions");
 var QuestionListPage = React.createClass({displayName: "QuestionListPage",
     deleteQuestion: function(id, event){
         // debugger;
+        event.preventDefault();
+        if(confirm("Are you sure?")){
         console.log("id" + id);
-         event.preventDefault();
+        
          QuestionAction.deleteQuestion(id);
 
          Toastr.success("question Deleted");
+        }
      },
 
 
@@ -51896,7 +52074,7 @@ var QuestionListPage = React.createClass({displayName: "QuestionListPage",
 
 module.exports = QuestionListPage;
 
-},{"../../actions/questionActions":207,"react":202,"react-router":33,"toastr":203}],228:[function(require,module,exports){
+},{"../../actions/questionActions":207,"react":202,"react-router":33,"toastr":203}],231:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52000,7 +52178,7 @@ module.exports = questionPage;
         });*/
    // }
   //  },
-},{"../../store/questionStore":237,"./questionList":227,"react":202,"react-router":33}],229:[function(require,module,exports){
+},{"../../store/questionStore":240,"./questionList":230,"react":202,"react-router":33}],232:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52116,7 +52294,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
 });
 
 module.exports = ManageStudentPage;
-},{"../../actions/studentActions":208,"../../store/studentStore":238,"react":202,"react-router":33,"toastr":203}],230:[function(require,module,exports){
+},{"../../actions/studentActions":208,"../../store/studentStore":241,"react":202,"react-router":33,"toastr":203}],233:[function(require,module,exports){
 "use strict";
 
 
@@ -52126,7 +52304,7 @@ var Common = {
 
 module.exports = Common;
 
-},{}],231:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 "use strict";
 
 var keyMirror = require("react/lib/keyMirror");
@@ -52143,12 +52321,12 @@ module.exports = keyMirror({
     CREATE_STUDENT_ASSESSMENT: null
 });
 
-},{"react/lib/keyMirror":187}],232:[function(require,module,exports){
+},{"react/lib/keyMirror":187}],235:[function(require,module,exports){
 var Dispatcher = require("flux").Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":2}],233:[function(require,module,exports){
+},{"flux":2}],236:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52161,7 +52339,7 @@ InitializeActions.initApp();
 Router.run(routes, function(Handler){ //Router.HistoryLocation, removed from args
     React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
-},{"./actions/initializeActions":206,"./routes":234,"react":202,"react-router":33}],234:[function(require,module,exports){
+},{"./actions/initializeActions":206,"./routes":237,"react":202,"react-router":33}],237:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52189,7 +52367,7 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/Assessment/assessmentPage":217,"./components/Assessment/manageAssessment":218,"./components/AssessmentCenter/assessmentCenterPage":214,"./components/AssessmentCenter/studentAssessmentPage":215,"./components/Student/manageStudent":219,"./components/Student/studentPage":221,"./components/app":222,"./components/assessment/manageAssessment":223,"./components/homePage":225,"./components/question/manageQuestion":226,"./components/question/questionPage":228,"./components/student/manageStudent":229,"react":202,"react-router":33}],235:[function(require,module,exports){
+},{"./components/Assessment/assessmentPage":218,"./components/Assessment/manageAssessment":219,"./components/AssessmentCenter/assessmentCenterPage":214,"./components/AssessmentCenter/studentAssessmentPage":215,"./components/Student/manageStudent":220,"./components/Student/studentPage":222,"./components/app":223,"./components/assessment/manageAssessment":225,"./components/homePage":227,"./components/question/manageQuestion":228,"./components/question/questionPage":231,"./components/student/manageStudent":232,"react":202,"react-router":33}],238:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52264,7 +52442,7 @@ Dispatcher.register(function(action){
 
 module.exports = AssessmentCenterStore;
 
-},{"../constants/actionTypes":231,"../dispatcher/appDispatcher":232,"events":1,"lodash":6,"object-assign":7}],236:[function(require,module,exports){
+},{"../constants/actionTypes":234,"../dispatcher/appDispatcher":235,"events":1,"lodash":6,"object-assign":7}],239:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52341,7 +52519,7 @@ Dispatcher.register(function(action){
 
 module.exports = AssessmentStore;
 
-},{"../constants/actionTypes":231,"../dispatcher/appDispatcher":232,"events":1,"lodash":6,"object-assign":7}],237:[function(require,module,exports){
+},{"../constants/actionTypes":234,"../dispatcher/appDispatcher":235,"events":1,"lodash":6,"object-assign":7}],240:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52418,7 +52596,7 @@ Dispatcher.register(function(action){
 
 module.exports = QuestionStore;
 
-},{"../constants/actionTypes":231,"../dispatcher/appDispatcher":232,"events":1,"lodash":6,"object-assign":7}],238:[function(require,module,exports){
+},{"../constants/actionTypes":234,"../dispatcher/appDispatcher":235,"events":1,"lodash":6,"object-assign":7}],241:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52493,4 +52671,4 @@ Dispatcher.register(function(action){
 
 module.exports = StudentStore;
 
-},{"../constants/actionTypes":231,"../dispatcher/appDispatcher":232,"events":1,"lodash":6,"object-assign":7}]},{},[233]);
+},{"../constants/actionTypes":234,"../dispatcher/appDispatcher":235,"events":1,"lodash":6,"object-assign":7}]},{},[236]);

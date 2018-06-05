@@ -6,6 +6,7 @@ var Link = Router.Link;
 var Toastr = require("toastr");
 var QuestionStore = require("../../store/questionStore");
 var QuestionActions = require("../../actions/questionActions");
+var QuestionForm = require("./questionForm");
 
 var ManageQuestionPage = React.createClass({
     mixins: [
@@ -13,22 +14,52 @@ var ManageQuestionPage = React.createClass({
     ],
 
     getInitialState: function(){
-        console.log('getInitialState');
+        console.log('getInitialState ManageQuestionPage');
+        var localQuestion = {Id: '', Text: '', Description: '' };
+        var questionId = this.props.params.id;
+
+        if(questionId){
+            localQuestion = QuestionStore.getQuestionById(questionId);
+        }
+
         return {
-            question: {Id: '', Text: '', Description: '' },
+            question: localQuestion,
             showId: false
         };
     },
 
     componentWillMount: function(){
         var questionId = this.props.params.id;
+        
         var currentComponent = this;
 
         if(questionId){
             this.setState({ question: QuestionStore.getQuestionById(questionId), showId: true });
         }
-  },
 
+        QuestionStore.addChangeListener(this._onChange);
+    },
+
+  componentWillUnmount: function(){
+    var questionId = this.props.params.id;
+    
+    var currentComponent = this;
+
+    if(questionId){
+        this.setState({ question: QuestionStore.getQuestionById(questionId), showId: true });
+    }
+
+    QuestionStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function(){
+    //debugger;
+        console.log('onchange in ManageQuestionPage');
+        var questionId = this.props.params.id;
+        if(questionId){
+            this.setState({question: QuestionStore.getQuestionById(questionId) });
+        }
+    },
     setQuestionState: function (event) {
         var field = event.target.name;
         var value = event.target.value;
@@ -46,43 +77,16 @@ var ManageQuestionPage = React.createClass({
     },
 
     render: function(){
-
-        var myStyle = this.state.showId ? 'inline' : 'none';
+        var localQuestion = {Id: '', Text: '', Description: '' };
+        //debugger;
+        if(this.state.question){
+            localQuestion = this.state.question;
+        }
 
         return (
             <div>
                 <h1>Manage Question</h1>
-                <div style= {{display: myStyle}}>
-                    <div className="form-group">
-                        <div>
-                            <label htmlFor="question">Id </label>
-                            <div className="field">
-                                <input type="text" name="Text" readOnly value={this.state.question.Id} className="form-control" onChange={this.setQuestionState} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="question">Question </label>
-                        <div className="field">
-                            <input type="text" name="Text" value={this.state.question.Text} className="form-control" onChange={this.setQuestionState} />
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="description">Description</label>
-                        <div className="field">
-                            <input type="text" name="Description" value={this.state.question.Description} className="form-control" onChange={this.setQuestionState} />
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <input type="submit" value="Save Question" className="btn btn-default" onClick={this.saveQuestion} />
-                    <Link to="questions" className="btn btn-default">Cancel</Link>
-                </div>
-
+                <QuestionForm question = {localQuestion} onChange = {this.setQuestionState} onSave = {this.saveQuestion} showId = {this.state.showId} />
             </div>
         );
     }

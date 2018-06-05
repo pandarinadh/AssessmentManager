@@ -10,11 +10,12 @@ var AssessmentAction = require("../../actions/assessmentActions");
 var AssessmentListPage = React.createClass({
     deleteAssessment: function(id, event){
         // debugger;
-        console.log("id" + id);
-         event.preventDefault();
+        event.preventDefault();
+        if(confirm("Are you sure?")){
          AssessmentAction.deleteAssessment(id);
 
          Toastr.success("assessment Deleted");
+        }
      },
 
 
