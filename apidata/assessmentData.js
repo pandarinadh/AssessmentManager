@@ -15,11 +15,6 @@
         "Description": "Doctor/health provider talked about reasons you might not want your child to take a medicine"
       },
       {
-        "Id": 3,
-        "Text": "Doctor/health provider asked you what you thought was best for your child when starting or stopping a prescription medicine",
-        "Description": "Doctor/health provider asked you what you thought was best for your child when starting or stopping a prescription medicine"
-      },
-      {
         "Id": 4,
         "Text": "Ease of getting necessary care, tests, or treatment child needed",
         "Description": "Ease of getting necessary care, tests, or treatment child needed"
@@ -75,11 +70,6 @@
         "Id": 3,
         "Text": "Doctor/health provider asked you what you thought was best for your child when starting or stopping a prescription medicine",
         "Description": "Doctor/health provider asked you what you thought was best for your child when starting or stopping a prescription medicine"
-      },
-      {
-        "Id": 4,
-        "Text": "Ease of getting necessary care, tests, or treatment child needed",
-        "Description": "Ease of getting necessary care, tests, or treatment child needed"
       },
       {
         "Id": 5,

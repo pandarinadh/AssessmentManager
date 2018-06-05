@@ -8,6 +8,7 @@ var AssessmentStore = require("../../store/assessmentStore");
 var AssessmentActions = require("../../actions/assessmentActions");
 var QuestionList = require("./../question/questionList");
 var AssessmentForm = require("./AssessmentForm");
+var QuestionStore = require("../../store/questionStore");
 
 var ManageAssessmentPage = React.createClass({
     mixins: [
@@ -17,13 +18,15 @@ var ManageAssessmentPage = React.createClass({
     getInitialState: function(){
         console.log('getInitialState');
         var localAssessment = {Id: '', Text: '', Description: '', Questions: []};
+        var localAllQuestions = QuestionStore.getAllQuestions();
         var assessmentId = this.props.params.id;
         if(assessmentId){
             localAssessment = AssessmentStore.getAssessmentById(assessmentId);
         }
         return {
             assessment: localAssessment,
-            showId: false
+            showId: false,
+            AllQuestions: localAllQuestions
         };
     },
 
@@ -49,6 +52,9 @@ var ManageAssessmentPage = React.createClass({
         if(assessmentId){
             this.setState({assessment: AssessmentStore.getAssessmentById(assessmentId), showId: true });
         }
+
+        var localAllQuestions = QuestionStore.getAllQuestions();
+        this.setState({AllQuestions: localAllQuestions});
     },
     setAssessmentState: function (event) {
         var field = event.target.name;
@@ -79,17 +85,27 @@ var ManageAssessmentPage = React.createClass({
 
         return (
             <div>
-                <h1>Manage Assessment</h1>
-                <AssessmentForm assessment = {localAssessment} onSave = {this.state.saveAssessment} onChange={this.setAssessmentState} showId = {this.state.showId}/>
-
                 <div className="Row">
-                    <div className="col-xs-10">
-                       <h1><strong>List of Questions </strong></h1>
+                    <div className="col-lg-4">
+                        <h1>Manage Assessment</h1>
+                        <AssessmentForm assessment = {localAssessment} onSave = {this.state.saveAssessment} onChange={this.setAssessmentState} showId = {this.state.showId}/>
+                    </div>
+                    <div className="col-xs-1" style={{alignItems: "center", width: '2px'}}>
+                            <div style={{border: '2px solid green', height: '650px', width: '2px' }}> </div>
+                    </div>
+                    <div className="col-lg-7">
+                        
+                        <div className="Row">
+                            <div className="col-xs-10">
+                            <h1><strong>List of Questions </strong></h1>
+
+                            </div>
+                        </div>
+                        <div className="Row">
+                            <QuestionList questions = {this.state.AllQuestions} assessmentQuestions = {questionList} displayCheckBox = "true" />
+                        </div>
                     </div>
                 </div>
-                <div className="Row">
-                    <QuestionList questions = {questionList} />
-                 </div>
             </div>
         );
     }
