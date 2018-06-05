@@ -41,7 +41,7 @@ var questionPage = React.createClass({
                 <h1>Question Page </h1>
                 <div>
                     <p><Link to="addQuestion" className = "btn btn-default" > Add Question </Link> </p>
-                    <QuestionList questions = {this.state.questions} />
+                    <QuestionList questions = {this.state.questions} displayCheckBox = "false" />
                 </div>
             </div>
         );
