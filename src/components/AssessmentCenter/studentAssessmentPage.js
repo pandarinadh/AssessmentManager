@@ -205,8 +205,9 @@ var StudentAssessmentPage = React.createClass({
 
         var displayDoneValue = this.state.done === 'none' ? 'block' : 'none';
         var studentName = this.state.studentAssessment.Student ? this.state.studentAssessment.Student.Name : '';
+        var totalQuestionLength = this.state.assessment.Questions ? this.state.assessment.Questions.length : 0;
+        var answeredQuestionLength = this.state.anweredQuestions ? this.state.anweredQuestions.length + 1 : 0;
 
-          
         var createAnsweredQuetionRow = function(answeredQuetion){
             var answer = answeredQuetion.Score && answeredQuetion.Score.Answer === 1 ? 'Answered' : 'Not Answered'; 
             var answerColor = answeredQuetion.Score && answeredQuetion.Score.Answer === 1 ? 'green' : 'red';
@@ -241,7 +242,10 @@ var StudentAssessmentPage = React.createClass({
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-lg-5" style={{textAlign: 'right', display: displayDoneValue}}>
+                            <div className="col-lg-1" style={{textAlign: 'left', display: displayDoneValue}}>
+                                {answeredQuestionLength} of {totalQuestionLength}
+                            </div>
+                            <div className="col-lg-4" style={{textAlign: 'right', display: displayDoneValue}}>
                                 Time: {this.state.counter}
                             </div>
                         </div>

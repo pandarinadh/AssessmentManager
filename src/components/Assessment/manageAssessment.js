@@ -9,6 +9,7 @@ var AssessmentActions = require("../../actions/assessmentActions");
 var QuestionList = require("./../question/questionList");
 var AssessmentForm = require("./AssessmentForm");
 var QuestionStore = require("../../store/questionStore");
+var _ = require("lodash");
 
 var ManageAssessmentPage = React.createClass({
     mixins: [
@@ -56,6 +57,31 @@ var ManageAssessmentPage = React.createClass({
         var localAllQuestions = QuestionStore.getAllQuestions();
         this.setState({AllQuestions: localAllQuestions});
     },
+
+    setQuestionState: function (event) {
+      //  debugger;
+        var field = event.target.name;
+        if(event.target.checked){
+            var localQuestion = _.find(this.state.AllQuestions, {Id: parseInt(field)});
+            var assessmentQuestion = _.find(this.state.assessment.Questions, {Id: parseInt(field)});
+            if(assessmentQuestion){
+                var existingAssessmentQuestionIndex = _.indexOf(this.state.assessment.Questions, assessmentQuestion);
+                this.state.assessment.Questions.splice(existingAssessmentQuestionIndex, localQuestion);
+            } else {
+                this.state.assessment.Questions.push(localQuestion);
+            }
+        }
+        else
+        {
+            _.remove(this.state.assessment.Questions, function(question){
+                return parseInt(field) === parseInt(question.Id);
+            });
+        }
+
+        return this.setState({assessment: this.state.assessment});
+    },
+
+
     setAssessmentState: function (event) {
         var field = event.target.name;
         var value = event.target.value;
@@ -69,7 +95,7 @@ var ManageAssessmentPage = React.createClass({
         console.log(this.state.assessment);
          AssessmentActions.saveAssessment(this.state.assessment);
          Toastr.success("assessment saved");
-        this.transitionTo("assessments");
+        //this.transitionTo("assessments");
     },
 
     render: function(){
@@ -88,10 +114,10 @@ var ManageAssessmentPage = React.createClass({
                 <div className="Row">
                     <div className="col-lg-4">
                         <h1>Manage Assessment</h1>
-                        <AssessmentForm assessment = {localAssessment} onSave = {this.state.saveAssessment} onChange={this.setAssessmentState} showId = {this.state.showId}/>
+                        <AssessmentForm assessment = {localAssessment} onSave = {this.saveAssessment} onChange={this.setAssessmentState} showId = {this.state.showId}/>
                     </div>
                     <div className="col-xs-1" style={{alignItems: "center", width: '2px'}}>
-                            <div style={{border: '2px solid green', height: '650px', width: '2px' }}> </div>
+                            <div style={{border: '2px solid green', height: '350px', width: '2px' }}> </div>
                     </div>
                     <div className="col-lg-7">
                         
@@ -102,7 +128,7 @@ var ManageAssessmentPage = React.createClass({
                             </div>
                         </div>
                         <div className="Row">
-                            <QuestionList questions = {this.state.AllQuestions} assessmentQuestions = {questionList} displayCheckBox = "true" />
+                            <QuestionList questions = {this.state.AllQuestions} assessmentQuestions = {questionList} displayCheckBox = "true" onChange = {this.setQuestionState} />
                         </div>
                     </div>
                 </div>

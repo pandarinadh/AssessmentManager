@@ -51064,8 +51064,9 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
 
         var displayDoneValue = this.state.done === 'none' ? 'block' : 'none';
         var studentName = this.state.studentAssessment.Student ? this.state.studentAssessment.Student.Name : '';
+        var totalQuestionLength = this.state.assessment.Questions ? this.state.assessment.Questions.length : 0;
+        var answeredQuestionLength = this.state.anweredQuestions ? this.state.anweredQuestions.length + 1 : 0;
 
-          
         var createAnsweredQuetionRow = function(answeredQuetion){
             var answer = answeredQuetion.Score && answeredQuetion.Score.Answer === 1 ? 'Answered' : 'Not Answered'; 
             var answerColor = answeredQuetion.Score && answeredQuetion.Score.Answer === 1 ? 'green' : 'red';
@@ -51100,7 +51101,10 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
                             )
                         ), 
                         React.createElement("div", {className: "row"}, 
-                            React.createElement("div", {className: "col-lg-5", style: {textAlign: 'right', display: displayDoneValue}}, 
+                            React.createElement("div", {className: "col-lg-1", style: {textAlign: 'left', display: displayDoneValue}}, 
+                                answeredQuestionLength, " of ", totalQuestionLength
+                            ), 
+                            React.createElement("div", {className: "col-lg-4", style: {textAlign: 'right', display: displayDoneValue}}, 
                                 "Time: ", this.state.counter
                             )
                         ), 
@@ -51337,6 +51341,7 @@ var AssessmentActions = require("../../actions/assessmentActions");
 var QuestionList = require("./../question/questionList");
 var AssessmentForm = require("./AssessmentForm");
 var QuestionStore = require("../../store/questionStore");
+var _ = require("lodash");
 
 var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage",
     mixins: [
@@ -51384,6 +51389,31 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
         var localAllQuestions = QuestionStore.getAllQuestions();
         this.setState({AllQuestions: localAllQuestions});
     },
+
+    setQuestionState: function (event) {
+      //  debugger;
+        var field = event.target.name;
+        if(event.target.checked){
+            var localQuestion = _.find(this.state.AllQuestions, {Id: parseInt(field)});
+            var assessmentQuestion = _.find(this.state.assessment.Questions, {Id: parseInt(field)});
+            if(assessmentQuestion){
+                var existingAssessmentQuestionIndex = _.indexOf(this.state.assessment.Questions, assessmentQuestion);
+                this.state.assessment.Questions.splice(existingAssessmentQuestionIndex, localQuestion);
+            } else {
+                this.state.assessment.Questions.push(localQuestion);
+            }
+        }
+        else
+        {
+            _.remove(this.state.assessment.Questions, function(question){
+                return parseInt(field) === parseInt(question.Id);
+            });
+        }
+
+        return this.setState({assessment: this.state.assessment});
+    },
+
+
     setAssessmentState: function (event) {
         var field = event.target.name;
         var value = event.target.value;
@@ -51397,7 +51427,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
         console.log(this.state.assessment);
          AssessmentActions.saveAssessment(this.state.assessment);
          Toastr.success("assessment saved");
-        this.transitionTo("assessments");
+        //this.transitionTo("assessments");
     },
 
     render: function(){
@@ -51416,10 +51446,10 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
                 React.createElement("div", {className: "Row"}, 
                     React.createElement("div", {className: "col-lg-4"}, 
                         React.createElement("h1", null, "Manage Assessment"), 
-                        React.createElement(AssessmentForm, {assessment: localAssessment, onSave: this.state.saveAssessment, onChange: this.setAssessmentState, showId: this.state.showId})
+                        React.createElement(AssessmentForm, {assessment: localAssessment, onSave: this.saveAssessment, onChange: this.setAssessmentState, showId: this.state.showId})
                     ), 
                     React.createElement("div", {className: "col-xs-1", style: {alignItems: "center", width: '2px'}}, 
-                            React.createElement("div", {style: {border: '2px solid green', height: '650px', width: '2px'}}, " ")
+                            React.createElement("div", {style: {border: '2px solid green', height: '350px', width: '2px'}}, " ")
                     ), 
                     React.createElement("div", {className: "col-lg-7"}, 
                         
@@ -51430,7 +51460,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
                             )
                         ), 
                         React.createElement("div", {className: "Row"}, 
-                            React.createElement(QuestionList, {questions: this.state.AllQuestions, assessmentQuestions: questionList, displayCheckBox: "true"})
+                            React.createElement(QuestionList, {questions: this.state.AllQuestions, assessmentQuestions: questionList, displayCheckBox: "true", onChange: this.setQuestionState})
                         )
                     )
                 )
@@ -51440,7 +51470,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 });
 
 module.exports = ManageAssessmentPage;
-},{"../../actions/assessmentActions":204,"../../store/assessmentStore":239,"../../store/questionStore":240,"./../question/questionList":230,"./AssessmentForm":216,"react":202,"react-router":33,"toastr":203}],220:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../store/assessmentStore":239,"../../store/questionStore":240,"./../question/questionList":230,"./AssessmentForm":216,"lodash":6,"react":202,"react-router":33,"toastr":203}],220:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51753,6 +51783,7 @@ var AssessmentActions = require("../../actions/assessmentActions");
 var QuestionList = require("./../question/questionList");
 var AssessmentForm = require("./AssessmentForm");
 var QuestionStore = require("../../store/questionStore");
+var _ = require("lodash");
 
 var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage",
     mixins: [
@@ -51800,6 +51831,31 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
         var localAllQuestions = QuestionStore.getAllQuestions();
         this.setState({AllQuestions: localAllQuestions});
     },
+
+    setQuestionState: function (event) {
+      //  debugger;
+        var field = event.target.name;
+        if(event.target.checked){
+            var localQuestion = _.find(this.state.AllQuestions, {Id: parseInt(field)});
+            var assessmentQuestion = _.find(this.state.assessment.Questions, {Id: parseInt(field)});
+            if(assessmentQuestion){
+                var existingAssessmentQuestionIndex = _.indexOf(this.state.assessment.Questions, assessmentQuestion);
+                this.state.assessment.Questions.splice(existingAssessmentQuestionIndex, localQuestion);
+            } else {
+                this.state.assessment.Questions.push(localQuestion);
+            }
+        }
+        else
+        {
+            _.remove(this.state.assessment.Questions, function(question){
+                return parseInt(field) === parseInt(question.Id);
+            });
+        }
+
+        return this.setState({assessment: this.state.assessment});
+    },
+
+
     setAssessmentState: function (event) {
         var field = event.target.name;
         var value = event.target.value;
@@ -51813,7 +51869,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
         console.log(this.state.assessment);
          AssessmentActions.saveAssessment(this.state.assessment);
          Toastr.success("assessment saved");
-        this.transitionTo("assessments");
+        //this.transitionTo("assessments");
     },
 
     render: function(){
@@ -51832,10 +51888,10 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
                 React.createElement("div", {className: "Row"}, 
                     React.createElement("div", {className: "col-lg-4"}, 
                         React.createElement("h1", null, "Manage Assessment"), 
-                        React.createElement(AssessmentForm, {assessment: localAssessment, onSave: this.state.saveAssessment, onChange: this.setAssessmentState, showId: this.state.showId})
+                        React.createElement(AssessmentForm, {assessment: localAssessment, onSave: this.saveAssessment, onChange: this.setAssessmentState, showId: this.state.showId})
                     ), 
                     React.createElement("div", {className: "col-xs-1", style: {alignItems: "center", width: '2px'}}, 
-                            React.createElement("div", {style: {border: '2px solid green', height: '650px', width: '2px'}}, " ")
+                            React.createElement("div", {style: {border: '2px solid green', height: '350px', width: '2px'}}, " ")
                     ), 
                     React.createElement("div", {className: "col-lg-7"}, 
                         
@@ -51846,7 +51902,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
                             )
                         ), 
                         React.createElement("div", {className: "Row"}, 
-                            React.createElement(QuestionList, {questions: this.state.AllQuestions, assessmentQuestions: questionList, displayCheckBox: "true"})
+                            React.createElement(QuestionList, {questions: this.state.AllQuestions, assessmentQuestions: questionList, displayCheckBox: "true", onChange: this.setQuestionState})
                         )
                     )
                 )
@@ -51856,7 +51912,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 });
 
 module.exports = ManageAssessmentPage;
-},{"../../actions/assessmentActions":204,"../../store/assessmentStore":239,"../../store/questionStore":240,"./../question/questionList":230,"./AssessmentForm":224,"react":202,"react-router":33,"toastr":203}],226:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../store/assessmentStore":239,"../../store/questionStore":240,"./../question/questionList":230,"./AssessmentForm":224,"lodash":6,"react":202,"react-router":33,"toastr":203}],226:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52091,7 +52147,7 @@ var QuestionListPage = React.createClass({displayName: "QuestionListPage",
                                  React.createElement("a", {href: "#", onClick: this.deleteQuestion.bind(this, question.Id)}, " Delete ")
                         ), 
                         React.createElement("div", {style: {display: showCheck}}, 
-                                React.createElement("input", {type: "checkBox", checked: localCheck})
+                                React.createElement("input", {type: "checkBox", defaultChecked: localCheck, name: question.Id, onChange: this.props.onChange})
                         )
                      ), 
                     React.createElement("td", null, React.createElement(Link, {to: "manageQuestion", params: {id: question.Id}}, " ", question.Id, " ")), 
@@ -52172,7 +52228,7 @@ var questionPage = React.createClass({displayName: "questionPage",
                 React.createElement("h1", null, "Question Page "), 
                 React.createElement("div", null, 
                     React.createElement("p", null, React.createElement(Link, {to: "addQuestion", className: "btn btn-default"}, " Add Question "), " "), 
-                    React.createElement(QuestionList, {questions: this.state.questions})
+                    React.createElement(QuestionList, {questions: this.state.questions, displayCheckBox: "false"})
                 )
             )
         );

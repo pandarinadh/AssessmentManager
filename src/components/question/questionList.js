@@ -38,7 +38,7 @@ var QuestionListPage = React.createClass({
                                  <a href="#" onClick = {this.deleteQuestion.bind(this, question.Id)}> Delete </a> 
                         </div>
                         <div style = {{display: showCheck}}>
-                                <input type="checkBox" checked = {localCheck} />
+                                <input type="checkBox" defaultChecked = {localCheck} name = {question.Id} onChange={this.props.onChange}/>
                         </div>
                      </td>
                     <td><Link to="manageQuestion" params={{id: question.Id}}> {question.Id} </Link></td>
