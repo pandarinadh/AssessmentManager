@@ -6,6 +6,9 @@ var Link = Router.Link;
 var Toastr = require("toastr");
 var StudentStore = require("../../store/studentStore");
 var StudentActions = require("../../actions/studentActions");
+var StudentForm = require("./studentForm");
+var AssessmentList = require('../Assessment/assessmentList');
+var AssessmentStore = require("../../store/assessmentStore");
 
 var ManageStudentPage = React.createClass({
     mixins: [
@@ -13,10 +16,17 @@ var ManageStudentPage = React.createClass({
     ],
 
     getInitialState: function(){
-        console.log('getInitialState');
+        console.log('getInitialState ManageStudentPage');
+        var localInitStudent = {Id: '', Name: '', Address: '', City: '', State: '', Zip: '', Assessments: [] };
+        var studentId = this.props.params.id;
+        var localAssessments = AssessmentStore.getAllAssessments();
+        if(studentId){
+            localInitStudent = StudentStore.getStudentById(studentId);
+        }
         return {
-            student: {Id: '', Name: '', Address: '', City: '', State: '', Zip: '' },
-            showId: false
+            student: localInitStudent,
+            showId: false,
+            assessments: localAssessments
         };
     },
 
@@ -27,7 +37,25 @@ var ManageStudentPage = React.createClass({
         if(studentId){
             this.setState({ student: StudentStore.getStudentById(studentId), showId: true });
         }
-  },
+        StudentStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function(){
+
+        StudentStore.addChangeListener(this._onChange);
+    },
+
+    _onChange: function(){
+        //debugger;
+        console.log('onchange in ManageStudentPage');
+        var studentId = this.props.params.id;
+        if(studentId){
+            this.setState({student: StudentStore.getStudentById(studentId), showId: true });
+        }
+
+        var localAssessments = AssessmentStore.getAllAssessments();
+        this.setState({assessments: localAssessments});
+
+    },
 
     setStudentState: function (event) {
         var field = event.target.name;
@@ -49,64 +77,37 @@ var ManageStudentPage = React.createClass({
 
         var myStyle = this.state.showId ? 'inline' : 'none';
 
+        var localAssessmentList = this.state.student ? this.state.student.Assessments : [];
+        
+        var localStudent = {Id: '', Name: '', Address: '', City: '', State: '', Zip: '' };
+        
+        if(this.state.student){
+            localStudent = this.state.student;
+        }
+
         return (
             <div>
-                <h1>Manage Student</h1>
-                <div style= {{display: myStyle}}>
-                    <div className="form-group">
-                        <div>
-                            <label htmlFor="student">Id </label>
-                            <div className="field">
-                                <input type="text" name="Text" readOnly value={this.state.student.Id} className="form-control" onChange={this.setStudentState} />
+                <div className="Row">
+                    <div className="col-lg-4">
+                        <h1>Manage Assessment</h1>
+                        <StudentForm student = {localStudent} showId = {this.state.showId} setStudentState = {this.setStudentState} />
+                    </div>
+                    <div className="col-xs-1" style={{alignItems: "center", width: '2px'}}>
+                            <div style={{border: '2px solid green', height: '550px', width: '2px' }}> </div>
+                    </div>
+                    <div className="col-lg-7">
+                        
+                        <div className="Row">
+                            <div className="col-xs-10">
+                            <h1><strong>List of Assessments </strong></h1>
+
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="student">Name </label>
-                        <div className="field">
-                            <input type="text" name="Name" value={this.state.student.Name} className="form-control" onChange={this.setStudentState} />
+                        <div className="Row">
+                            <AssessmentList assessments = {this.state.assessments} displayCheckBox = "true" />
                         </div>
                     </div>
                 </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="description">Address</label>
-                        <div className="field">
-                            <input type="text" name="Address" value={this.state.student.Address} className="form-control" onChange={this.setStudentState} />
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="description">City</label>
-                        <div className="field">
-                            <input type="text" name="City" value={this.state.student.City} className="form-control" onChange={this.setStudentState} />
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="description">State</label>
-                        <div className="field">
-                            <input type="text" name="State" value={this.state.student.State} className="form-control" onChange={this.setStudentState} />
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div>
-                        <label htmlFor="description">Zip</label>
-                        <div className="field">
-                            <input type="text" name="Zip" value={this.state.student.Zip} className="form-control" onChange={this.setStudentState} />
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <input type="submit" value="Save Student" className="btn btn-default" onClick={this.saveStudent} />
-                    <Link to="students" className="btn btn-default">Cancel</Link>
-                </div>
-
             </div>
         );
     }

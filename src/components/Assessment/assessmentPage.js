@@ -42,7 +42,7 @@ var assessmentPage = React.createClass({
                 <h1>Assessment Page </h1>
                 <div>
                     <p><Link to="addAssessment" className = "btn btn-default" > Add Assessment </Link> </p>
-                    <AssessmentList assessments = {this.state.assessments} />
+                    <AssessmentList assessments = {this.state.assessments} displayCheckBox = "false" />
                 </div>
             </div>
         );

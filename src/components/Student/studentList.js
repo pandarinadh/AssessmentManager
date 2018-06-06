@@ -9,11 +9,12 @@ var StudentAction = require("../../actions/studentActions");
 var StudentListPage = React.createClass({
     deleteStudent: function(id, event){
         // debugger;
-        console.log("id" + id);
-         event.preventDefault();
+        event.preventDefault();
+        if(confirm("Are you sure?")){
          StudentAction.deleteStudent(id);
 
          Toastr.success("student Deleted");
+        }
      },
 
 

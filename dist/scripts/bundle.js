@@ -50298,7 +50298,7 @@ var AssessmentActions = {
 
 module.exports = AssessmentActions;
 
-},{"../api/assessmentApi":209,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],205:[function(require,module,exports){
+},{"../api/assessmentApi":209,"../constants/actionTypes":236,"../dispatcher/appDispatcher":237}],205:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50318,7 +50318,7 @@ var AssessmentCenterActions = {
 
 module.exports = AssessmentCenterActions;
 
-},{"../api/assessmentCenterApi":210,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],206:[function(require,module,exports){
+},{"../api/assessmentCenterApi":210,"../constants/actionTypes":236,"../dispatcher/appDispatcher":237}],206:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50346,7 +50346,7 @@ var InitializeActions = {
 
 module.exports = InitializeActions;
 
-},{"../api/assessmentApi":209,"../api/assessmentCenterApi":210,"../api/questionApi":211,"../api/studentApi":212,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],207:[function(require,module,exports){
+},{"../api/assessmentApi":209,"../api/assessmentCenterApi":210,"../api/questionApi":211,"../api/studentApi":212,"../constants/actionTypes":236,"../dispatcher/appDispatcher":237}],207:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50375,7 +50375,7 @@ var QuestionActions = {
 
 module.exports = QuestionActions;
 
-},{"../api/questionApi":211,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],208:[function(require,module,exports){
+},{"../api/questionApi":211,"../constants/actionTypes":236,"../dispatcher/appDispatcher":237}],208:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -50404,7 +50404,7 @@ var StudentActions = {
 
 module.exports = StudentActions;
 
-},{"../api/studentApi":212,"../constants/actionTypes":234,"../dispatcher/appDispatcher":235}],209:[function(require,module,exports){
+},{"../api/studentApi":212,"../constants/actionTypes":236,"../dispatcher/appDispatcher":237}],209:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50492,7 +50492,7 @@ var AssessmentApi = {
 };
 
 module.exports = AssessmentApi;
-},{"./../constants/Common":233,"react":202}],210:[function(require,module,exports){
+},{"./../constants/Common":235,"react":202}],210:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50580,7 +50580,7 @@ var AssessmentApi = {
 };
 
 module.exports = AssessmentApi;
-},{"./../constants/Common":233,"react":202}],211:[function(require,module,exports){
+},{"./../constants/Common":235,"react":202}],211:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50668,7 +50668,7 @@ var QuestionApi = {
 };
 
 module.exports = QuestionApi;
-},{"./../constants/Common":233,"react":202}],212:[function(require,module,exports){
+},{"./../constants/Common":235,"react":202}],212:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50756,7 +50756,7 @@ var StudentApi = {
 };
 
 module.exports = StudentApi;
-},{"./../constants/Common":233,"react":202}],213:[function(require,module,exports){
+},{"./../constants/Common":235,"react":202}],213:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -50856,7 +50856,7 @@ var AssessmentCenterPage = React.createClass({displayName: "AssessmentCenterPage
 });
 
 module.exports = AssessmentCenterPage;
-},{"../../store/assessmentCenterStore":238,"./assessmentCenterList":213,"react":202,"react-router":33}],215:[function(require,module,exports){
+},{"../../store/assessmentCenterStore":240,"./assessmentCenterList":213,"react":202,"react-router":33}],215:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51171,7 +51171,7 @@ var StudentAssessmentPage = React.createClass({displayName: "StudentAssessmentPa
 
 module.exports = StudentAssessmentPage;
 
-},{"../../store/assessmentCenterStore":238,"../../store/assessmentStore":239,"./../../actions/assessmentCenterActions":205,"./assessmentCenterList":213,"lodash":6,"react":202,"react-router":33}],216:[function(require,module,exports){
+},{"../../store/assessmentCenterStore":240,"../../store/assessmentStore":241,"./../../actions/assessmentCenterActions":205,"./assessmentCenterList":213,"lodash":6,"react":202,"react-router":33}],216:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51230,6 +51230,7 @@ var Link = Router.Link;
 var AssessmentApi = require("../../api/assessmentApi");
 var Toastr = require("toastr");
 var AssessmentAction = require("../../actions/assessmentActions");
+var _ = require("lodash");
 
 var AssessmentListPage = React.createClass({displayName: "AssessmentListPage",
     deleteAssessment: function(id, event){
@@ -51245,10 +51246,26 @@ var AssessmentListPage = React.createClass({displayName: "AssessmentListPage",
 
     render: function(){
 
+        var showDelete = this.props.displayCheckBox ? 'none' : 'block';
+        var showCheck = this.props.displayCheckBox ? 'block' : 'none';
+
         var createAssessmentRow = function(assessment){
+
+            var studentAssessment = _.find(this.props.studentAssessments, {Id: parseInt(assessment.Id)});
+
+            var localCheck = studentAssessment ? true : false;
+
             return (
                 React.createElement("tr", {key: assessment.Id}, 
-                     React.createElement("td", null, " ", React.createElement("a", {href: "#", onClick: this.deleteAssessment.bind(this, assessment.Id)}, " Delete "), " "), 
+                     React.createElement("td", null, 
+                        React.createElement("div", {style: {display: showDelete}}, 
+                                 React.createElement("a", {href: "#", onClick: this.deleteAssessment.bind(this, assessment.Id)}, " Delete ")
+                        ), 
+                        React.createElement("div", {style: {display: showCheck}}, 
+                                React.createElement("input", {type: "checkBox", defaultChecked: localCheck, name: assessment.Id, onChange: this.props.onChange})
+                        )
+                     ), 
+
                     React.createElement("td", null, React.createElement(Link, {to: "manageAssessment", params: {id: assessment.Id}}, " ", assessment.Id, " ")), 
                     React.createElement("td", null, assessment.Text), 
                     React.createElement("td", null, assessment.Description)
@@ -51276,7 +51293,7 @@ var AssessmentListPage = React.createClass({displayName: "AssessmentListPage",
 
 module.exports = AssessmentListPage;
 
-},{"../../actions/assessmentActions":204,"../../api/assessmentApi":209,"react":202,"react-router":33,"toastr":203}],218:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../api/assessmentApi":209,"lodash":6,"react":202,"react-router":33,"toastr":203}],218:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51321,7 +51338,7 @@ var assessmentPage = React.createClass({displayName: "assessmentPage",
                 React.createElement("h1", null, "Assessment Page "), 
                 React.createElement("div", null, 
                     React.createElement("p", null, React.createElement(Link, {to: "addAssessment", className: "btn btn-default"}, " Add Assessment "), " "), 
-                    React.createElement(AssessmentList, {assessments: this.state.assessments})
+                    React.createElement(AssessmentList, {assessments: this.state.assessments, displayCheckBox: "false"})
                 )
             )
         );
@@ -51329,7 +51346,7 @@ var assessmentPage = React.createClass({displayName: "assessmentPage",
 });
 
 module.exports = assessmentPage;
-},{"../../api/assessmentApi":209,"../../store/assessmentStore":239,"./assessmentList":217,"react":202,"react-router":33}],219:[function(require,module,exports){
+},{"../../api/assessmentApi":209,"../../store/assessmentStore":241,"./assessmentList":217,"react":202,"react-router":33}],219:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51470,7 +51487,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 });
 
 module.exports = ManageAssessmentPage;
-},{"../../actions/assessmentActions":204,"../../store/assessmentStore":239,"../../store/questionStore":240,"./../question/questionList":230,"./AssessmentForm":216,"lodash":6,"react":202,"react-router":33,"toastr":203}],220:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../store/assessmentStore":241,"../../store/questionStore":242,"./../question/questionList":231,"./AssessmentForm":216,"lodash":6,"react":202,"react-router":33,"toastr":203}],220:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51479,6 +51496,9 @@ var Link = Router.Link;
 var Toastr = require("toastr");
 var StudentStore = require("../../store/studentStore");
 var StudentActions = require("../../actions/studentActions");
+var StudentForm = require("./studentForm");
+var AssessmentList = require('../Assessment/assessmentList');
+var AssessmentStore = require("../../store/assessmentStore");
 
 var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
     mixins: [
@@ -51486,10 +51506,17 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
     ],
 
     getInitialState: function(){
-        console.log('getInitialState');
+        console.log('getInitialState ManageStudentPage');
+        var localInitStudent = {Id: '', Name: '', Address: '', City: '', State: '', Zip: '', Assessments: [] };
+        var studentId = this.props.params.id;
+        var localAssessments = AssessmentStore.getAllAssessments();
+        if(studentId){
+            localInitStudent = StudentStore.getStudentById(studentId);
+        }
         return {
-            student: {Id: '', Name: '', Address: '', City: '', State: '', Zip: '' },
-            showId: false
+            student: localInitStudent,
+            showId: false,
+            assessments: localAssessments
         };
     },
 
@@ -51500,7 +51527,25 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
         if(studentId){
             this.setState({ student: StudentStore.getStudentById(studentId), showId: true });
         }
-  },
+        StudentStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function(){
+
+        StudentStore.addChangeListener(this._onChange);
+    },
+
+    _onChange: function(){
+        //debugger;
+        console.log('onchange in ManageStudentPage');
+        var studentId = this.props.params.id;
+        if(studentId){
+            this.setState({student: StudentStore.getStudentById(studentId), showId: true });
+        }
+
+        var localAssessments = AssessmentStore.getAllAssessments();
+        this.setState({assessments: localAssessments});
+
+    },
 
     setStudentState: function (event) {
         var field = event.target.name;
@@ -51522,15 +51567,63 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
 
         var myStyle = this.state.showId ? 'inline' : 'none';
 
+        var localAssessmentList = this.state.student ? this.state.student.Assessments : [];
+        
+        var localStudent = {Id: '', Name: '', Address: '', City: '', State: '', Zip: '' };
+        
+        if(this.state.student){
+            localStudent = this.state.student;
+        }
+
         return (
             React.createElement("div", null, 
-                React.createElement("h1", null, "Manage Student"), 
+                React.createElement("div", {className: "Row"}, 
+                    React.createElement("div", {className: "col-lg-4"}, 
+                        React.createElement("h1", null, "Manage Assessment"), 
+                        React.createElement(StudentForm, {student: localStudent, showId: this.state.showId, setStudentState: this.setStudentState})
+                    ), 
+                    React.createElement("div", {className: "col-xs-1", style: {alignItems: "center", width: '2px'}}, 
+                            React.createElement("div", {style: {border: '2px solid green', height: '550px', width: '2px'}}, " ")
+                    ), 
+                    React.createElement("div", {className: "col-lg-7"}, 
+                        
+                        React.createElement("div", {className: "Row"}, 
+                            React.createElement("div", {className: "col-xs-10"}, 
+                            React.createElement("h1", null, React.createElement("strong", null, "List of Assessments "))
+
+                            )
+                        ), 
+                        React.createElement("div", {className: "Row"}, 
+                            React.createElement(AssessmentList, {assessments: this.state.assessments, displayCheckBox: "true"})
+                        )
+                    )
+                )
+            )
+        );
+    }
+});
+
+module.exports = ManageStudentPage;
+},{"../../actions/studentActions":208,"../../store/assessmentStore":241,"../../store/studentStore":243,"../Assessment/assessmentList":217,"./studentForm":221,"react":202,"react-router":33,"toastr":203}],221:[function(require,module,exports){
+"use strict";
+
+var React = require("react");
+var Router = require("react-router");
+var Link = Router.Link;
+
+var StudentForm = React.createClass({displayName: "StudentForm",
+    render: function(){
+    //debugger;
+        var myStyle = this.props.showId ? 'inline' : 'none';
+
+        return (
+            React.createElement("div", null, 
                 React.createElement("div", {style: {display: myStyle}}, 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("div", null, 
                             React.createElement("label", {htmlFor: "student"}, "Id "), 
                             React.createElement("div", {className: "field"}, 
-                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.state.student.Id, className: "form-control", onChange: this.setStudentState})
+                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.student.Id, className: "form-control", onChange: this.props.setStudentState})
                             )
                         )
                     )
@@ -51539,7 +51632,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "student"}, "Name "), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Name", value: this.state.student.Name, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "Name", value: this.props.student.Name, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
@@ -51547,7 +51640,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Address"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Address", value: this.state.student.Address, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "Address", value: this.props.student.Address, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
@@ -51555,7 +51648,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "City"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "City", value: this.state.student.City, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "City", value: this.props.student.City, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
@@ -51563,7 +51656,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "State"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "State", value: this.state.student.State, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "State", value: this.props.student.State, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
@@ -51571,22 +51664,21 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Zip"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Zip", value: this.state.student.Zip, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "Zip", value: this.props.student.Zip, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
                 React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {type: "submit", value: "Save Student", className: "btn btn-default", onClick: this.saveStudent}), 
+                    React.createElement("input", {type: "submit", value: "Save Student", className: "btn btn-default", onClick: this.props.saveStudent}), 
                     React.createElement(Link, {to: "students", className: "btn btn-default"}, "Cancel")
                 )
-
             )
         );
     }
 });
 
-module.exports = ManageStudentPage;
-},{"../../actions/studentActions":208,"../../store/studentStore":241,"react":202,"react-router":33,"toastr":203}],221:[function(require,module,exports){
+module.exports = StudentForm;
+},{"react":202,"react-router":33}],222:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51598,11 +51690,12 @@ var StudentAction = require("../../actions/studentActions");
 var StudentListPage = React.createClass({displayName: "StudentListPage",
     deleteStudent: function(id, event){
         // debugger;
-        console.log("id" + id);
-         event.preventDefault();
+        event.preventDefault();
+        if(confirm("Are you sure?")){
          StudentAction.deleteStudent(id);
 
          Toastr.success("student Deleted");
+        }
      },
 
 
@@ -51645,7 +51738,7 @@ var StudentListPage = React.createClass({displayName: "StudentListPage",
 
 module.exports = StudentListPage;
 
-},{"../../actions/studentActions":208,"react":202,"react-router":33,"toastr":203}],222:[function(require,module,exports){
+},{"../../actions/studentActions":208,"react":202,"react-router":33,"toastr":203}],223:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51689,7 +51782,7 @@ var StudentPage = React.createClass({displayName: "StudentPage",
                 React.createElement("h1", null, "Student Page "), 
                 React.createElement("div", null, 
                     React.createElement("p", null, React.createElement(Link, {to: "addStudent", className: "btn btn-default"}, " Add Student "), " "), 
-                    React.createElement(StudentList, {students: this.state.students})
+                    React.createElement(StudentList, {students: this.state.students, setStudentState: this.setStudentState, saveStudent: this.saveStudent})
                 )
             )
         );
@@ -51697,7 +51790,7 @@ var StudentPage = React.createClass({displayName: "StudentPage",
 });
 
 module.exports = StudentPage;
-},{"../../store/studentStore":241,"./studentList":221,"react":202,"react-router":33}],223:[function(require,module,exports){
+},{"../../store/studentStore":243,"./studentList":222,"react":202,"react-router":33}],224:[function(require,module,exports){
 /*eslint-disable strict */ //Disabling check because we cant run strict mode. Need global vars
 
 var React = require("react");
@@ -51721,7 +51814,7 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./common/header":226,"jquery":5,"react":202,"react-router":33}],224:[function(require,module,exports){
+},{"./common/header":227,"jquery":5,"react":202,"react-router":33}],225:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51771,7 +51864,7 @@ var AssessmentForm = React.createClass({displayName: "AssessmentForm",
 
 module.exports = AssessmentForm;
 
-},{"react":202,"react-router":33}],225:[function(require,module,exports){
+},{"react":202,"react-router":33}],226:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51912,7 +52005,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
 });
 
 module.exports = ManageAssessmentPage;
-},{"../../actions/assessmentActions":204,"../../store/assessmentStore":239,"../../store/questionStore":240,"./../question/questionList":230,"./AssessmentForm":224,"lodash":6,"react":202,"react-router":33,"toastr":203}],226:[function(require,module,exports){
+},{"../../actions/assessmentActions":204,"../../store/assessmentStore":241,"../../store/questionStore":242,"./../question/questionList":231,"./AssessmentForm":225,"lodash":6,"react":202,"react-router":33,"toastr":203}],227:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51941,7 +52034,7 @@ var Header = React.createClass({displayName: "Header",
 
 module.exports = Header;
 
-},{"react":202,"react-router":33}],227:[function(require,module,exports){
+},{"react":202,"react-router":33}],228:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51960,7 +52053,7 @@ var HomePage = React.createClass({displayName: "HomePage",
 
 module.exports = HomePage;
 
-},{"react":202}],228:[function(require,module,exports){
+},{"react":202}],229:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52056,7 +52149,7 @@ var ManageQuestionPage = React.createClass({displayName: "ManageQuestionPage",
 });
 
 module.exports = ManageQuestionPage;
-},{"../../actions/questionActions":207,"../../store/questionStore":240,"./questionForm":229,"react":202,"react-router":33,"toastr":203}],229:[function(require,module,exports){
+},{"../../actions/questionActions":207,"../../store/questionStore":242,"./questionForm":230,"react":202,"react-router":33,"toastr":203}],230:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52106,7 +52199,7 @@ var QuestionForm = React.createClass({displayName: "QuestionForm",
 });
 
 module.exports = QuestionForm;
-},{"react":202,"react-router":33}],230:[function(require,module,exports){
+},{"react":202,"react-router":33}],231:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52184,7 +52277,7 @@ var QuestionListPage = React.createClass({displayName: "QuestionListPage",
 
 module.exports = QuestionListPage;
 
-},{"../../actions/questionActions":207,"lodash":6,"react":202,"react-router":33,"toastr":203}],231:[function(require,module,exports){
+},{"../../actions/questionActions":207,"lodash":6,"react":202,"react-router":33,"toastr":203}],232:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52288,7 +52381,7 @@ module.exports = questionPage;
         });*/
    // }
   //  },
-},{"../../store/questionStore":240,"./questionList":230,"react":202,"react-router":33}],232:[function(require,module,exports){
+},{"../../store/questionStore":242,"./questionList":231,"react":202,"react-router":33}],233:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52297,6 +52390,9 @@ var Link = Router.Link;
 var Toastr = require("toastr");
 var StudentStore = require("../../store/studentStore");
 var StudentActions = require("../../actions/studentActions");
+var StudentForm = require("./studentForm");
+var AssessmentList = require('../Assessment/assessmentList');
+var AssessmentStore = require("../../store/assessmentStore");
 
 var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
     mixins: [
@@ -52304,10 +52400,17 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
     ],
 
     getInitialState: function(){
-        console.log('getInitialState');
+        console.log('getInitialState ManageStudentPage');
+        var localInitStudent = {Id: '', Name: '', Address: '', City: '', State: '', Zip: '', Assessments: [] };
+        var studentId = this.props.params.id;
+        var localAssessments = AssessmentStore.getAllAssessments();
+        if(studentId){
+            localInitStudent = StudentStore.getStudentById(studentId);
+        }
         return {
-            student: {Id: '', Name: '', Address: '', City: '', State: '', Zip: '' },
-            showId: false
+            student: localInitStudent,
+            showId: false,
+            assessments: localAssessments
         };
     },
 
@@ -52318,7 +52421,25 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
         if(studentId){
             this.setState({ student: StudentStore.getStudentById(studentId), showId: true });
         }
-  },
+        StudentStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function(){
+
+        StudentStore.addChangeListener(this._onChange);
+    },
+
+    _onChange: function(){
+        //debugger;
+        console.log('onchange in ManageStudentPage');
+        var studentId = this.props.params.id;
+        if(studentId){
+            this.setState({student: StudentStore.getStudentById(studentId), showId: true });
+        }
+
+        var localAssessments = AssessmentStore.getAllAssessments();
+        this.setState({assessments: localAssessments});
+
+    },
 
     setStudentState: function (event) {
         var field = event.target.name;
@@ -52340,15 +52461,63 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
 
         var myStyle = this.state.showId ? 'inline' : 'none';
 
+        var localAssessmentList = this.state.student ? this.state.student.Assessments : [];
+        
+        var localStudent = {Id: '', Name: '', Address: '', City: '', State: '', Zip: '' };
+        
+        if(this.state.student){
+            localStudent = this.state.student;
+        }
+
         return (
             React.createElement("div", null, 
-                React.createElement("h1", null, "Manage Student"), 
+                React.createElement("div", {className: "Row"}, 
+                    React.createElement("div", {className: "col-lg-4"}, 
+                        React.createElement("h1", null, "Manage Assessment"), 
+                        React.createElement(StudentForm, {student: localStudent, showId: this.state.showId, setStudentState: this.setStudentState})
+                    ), 
+                    React.createElement("div", {className: "col-xs-1", style: {alignItems: "center", width: '2px'}}, 
+                            React.createElement("div", {style: {border: '2px solid green', height: '550px', width: '2px'}}, " ")
+                    ), 
+                    React.createElement("div", {className: "col-lg-7"}, 
+                        
+                        React.createElement("div", {className: "Row"}, 
+                            React.createElement("div", {className: "col-xs-10"}, 
+                            React.createElement("h1", null, React.createElement("strong", null, "List of Assessments "))
+
+                            )
+                        ), 
+                        React.createElement("div", {className: "Row"}, 
+                            React.createElement(AssessmentList, {assessments: this.state.assessments, displayCheckBox: "true"})
+                        )
+                    )
+                )
+            )
+        );
+    }
+});
+
+module.exports = ManageStudentPage;
+},{"../../actions/studentActions":208,"../../store/assessmentStore":241,"../../store/studentStore":243,"../Assessment/assessmentList":217,"./studentForm":234,"react":202,"react-router":33,"toastr":203}],234:[function(require,module,exports){
+"use strict";
+
+var React = require("react");
+var Router = require("react-router");
+var Link = Router.Link;
+
+var StudentForm = React.createClass({displayName: "StudentForm",
+    render: function(){
+    //debugger;
+        var myStyle = this.props.showId ? 'inline' : 'none';
+
+        return (
+            React.createElement("div", null, 
                 React.createElement("div", {style: {display: myStyle}}, 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("div", null, 
                             React.createElement("label", {htmlFor: "student"}, "Id "), 
                             React.createElement("div", {className: "field"}, 
-                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.state.student.Id, className: "form-control", onChange: this.setStudentState})
+                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.student.Id, className: "form-control", onChange: this.props.setStudentState})
                             )
                         )
                     )
@@ -52357,7 +52526,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "student"}, "Name "), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Name", value: this.state.student.Name, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "Name", value: this.props.student.Name, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
@@ -52365,7 +52534,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Address"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Address", value: this.state.student.Address, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "Address", value: this.props.student.Address, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
@@ -52373,7 +52542,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "City"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "City", value: this.state.student.City, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "City", value: this.props.student.City, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
@@ -52381,7 +52550,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "State"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "State", value: this.state.student.State, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "State", value: this.props.student.State, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
@@ -52389,22 +52558,21 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Zip"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Zip", value: this.state.student.Zip, className: "form-control", onChange: this.setStudentState})
+                            React.createElement("input", {type: "text", name: "Zip", value: this.props.student.Zip, className: "form-control", onChange: this.props.setStudentState})
                         )
                     )
                 ), 
                 React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {type: "submit", value: "Save Student", className: "btn btn-default", onClick: this.saveStudent}), 
+                    React.createElement("input", {type: "submit", value: "Save Student", className: "btn btn-default", onClick: this.props.saveStudent}), 
                     React.createElement(Link, {to: "students", className: "btn btn-default"}, "Cancel")
                 )
-
             )
         );
     }
 });
 
-module.exports = ManageStudentPage;
-},{"../../actions/studentActions":208,"../../store/studentStore":241,"react":202,"react-router":33,"toastr":203}],233:[function(require,module,exports){
+module.exports = StudentForm;
+},{"react":202,"react-router":33}],235:[function(require,module,exports){
 "use strict";
 
 
@@ -52414,7 +52582,7 @@ var Common = {
 
 module.exports = Common;
 
-},{}],234:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
 "use strict";
 
 var keyMirror = require("react/lib/keyMirror");
@@ -52431,12 +52599,12 @@ module.exports = keyMirror({
     CREATE_STUDENT_ASSESSMENT: null
 });
 
-},{"react/lib/keyMirror":187}],235:[function(require,module,exports){
+},{"react/lib/keyMirror":187}],237:[function(require,module,exports){
 var Dispatcher = require("flux").Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":2}],236:[function(require,module,exports){
+},{"flux":2}],238:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52449,7 +52617,7 @@ InitializeActions.initApp();
 Router.run(routes, function(Handler){ //Router.HistoryLocation, removed from args
     React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
-},{"./actions/initializeActions":206,"./routes":237,"react":202,"react-router":33}],237:[function(require,module,exports){
+},{"./actions/initializeActions":206,"./routes":239,"react":202,"react-router":33}],239:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52477,7 +52645,7 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/Assessment/assessmentPage":218,"./components/Assessment/manageAssessment":219,"./components/AssessmentCenter/assessmentCenterPage":214,"./components/AssessmentCenter/studentAssessmentPage":215,"./components/Student/manageStudent":220,"./components/Student/studentPage":222,"./components/app":223,"./components/assessment/manageAssessment":225,"./components/homePage":227,"./components/question/manageQuestion":228,"./components/question/questionPage":231,"./components/student/manageStudent":232,"react":202,"react-router":33}],238:[function(require,module,exports){
+},{"./components/Assessment/assessmentPage":218,"./components/Assessment/manageAssessment":219,"./components/AssessmentCenter/assessmentCenterPage":214,"./components/AssessmentCenter/studentAssessmentPage":215,"./components/Student/manageStudent":220,"./components/Student/studentPage":223,"./components/app":224,"./components/assessment/manageAssessment":226,"./components/homePage":228,"./components/question/manageQuestion":229,"./components/question/questionPage":232,"./components/student/manageStudent":233,"react":202,"react-router":33}],240:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52552,7 +52720,7 @@ Dispatcher.register(function(action){
 
 module.exports = AssessmentCenterStore;
 
-},{"../constants/actionTypes":234,"../dispatcher/appDispatcher":235,"events":1,"lodash":6,"object-assign":7}],239:[function(require,module,exports){
+},{"../constants/actionTypes":236,"../dispatcher/appDispatcher":237,"events":1,"lodash":6,"object-assign":7}],241:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52629,7 +52797,7 @@ Dispatcher.register(function(action){
 
 module.exports = AssessmentStore;
 
-},{"../constants/actionTypes":234,"../dispatcher/appDispatcher":235,"events":1,"lodash":6,"object-assign":7}],240:[function(require,module,exports){
+},{"../constants/actionTypes":236,"../dispatcher/appDispatcher":237,"events":1,"lodash":6,"object-assign":7}],242:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52706,7 +52874,7 @@ Dispatcher.register(function(action){
 
 module.exports = QuestionStore;
 
-},{"../constants/actionTypes":234,"../dispatcher/appDispatcher":235,"events":1,"lodash":6,"object-assign":7}],241:[function(require,module,exports){
+},{"../constants/actionTypes":236,"../dispatcher/appDispatcher":237,"events":1,"lodash":6,"object-assign":7}],243:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require("../dispatcher/appDispatcher");
@@ -52781,4 +52949,4 @@ Dispatcher.register(function(action){
 
 module.exports = StudentStore;
 
-},{"../constants/actionTypes":234,"../dispatcher/appDispatcher":235,"events":1,"lodash":6,"object-assign":7}]},{},[236]);
+},{"../constants/actionTypes":236,"../dispatcher/appDispatcher":237,"events":1,"lodash":6,"object-assign":7}]},{},[238]);

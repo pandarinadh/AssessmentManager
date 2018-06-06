@@ -6,6 +6,7 @@ var Link = Router.Link;
 var AssessmentApi = require("../../api/assessmentApi");
 var Toastr = require("toastr");
 var AssessmentAction = require("../../actions/assessmentActions");
+var _ = require("lodash");
 
 var AssessmentListPage = React.createClass({
     deleteAssessment: function(id, event){
@@ -21,10 +22,26 @@ var AssessmentListPage = React.createClass({
 
     render: function(){
 
+        var showDelete = this.props.displayCheckBox ? 'none' : 'block';
+        var showCheck = this.props.displayCheckBox ? 'block' : 'none';
+
         var createAssessmentRow = function(assessment){
+
+            var studentAssessment = _.find(this.props.studentAssessments, {Id: parseInt(assessment.Id)});
+
+            var localCheck = studentAssessment ? true : false;
+
             return (
                 <tr key={assessment.Id}>
-                     <td> <a href="#" onClick = {this.deleteAssessment.bind(this, assessment.Id)}> Delete </a> </td>
+                     <td> 
+                        <div style = {{display: showDelete}}>
+                                 <a href="#" onClick = {this.deleteAssessment.bind(this, assessment.Id)}> Delete </a> 
+                        </div>
+                        <div style = {{display: showCheck}}>
+                                <input type="checkBox" defaultChecked = {localCheck} name = {assessment.Id} onChange={this.props.onChange}/>
+                        </div>
+                     </td>
+
                     <td><Link to="manageAssessment" params={{id: assessment.Id}}> {assessment.Id} </Link></td>
                     <td>{assessment.Text}</td>
                     <td>{assessment.Description}</td>

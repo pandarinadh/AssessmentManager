@@ -41,7 +41,7 @@ var StudentPage = React.createClass({
                 <h1>Student Page </h1>
                 <div>
                     <p><Link to="addStudent" className = "btn btn-default" > Add Student </Link> </p>
-                    <StudentList students = {this.state.students} />
+                    <StudentList students = {this.state.students} setStudentState = {this.setStudentState} saveStudent = {this.saveStudent} />
                 </div>
             </div>
         );
