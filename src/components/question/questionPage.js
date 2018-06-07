@@ -12,7 +12,8 @@ var questionPage = React.createClass({
         return {
             questions: QuestionStore.getAllQuestions(),
             errors: {},
-            dirty: false
+            dirty: false,
+            checkBoxFlag: false
         };
     },
 
@@ -41,7 +42,7 @@ var questionPage = React.createClass({
                 <h1>Question Page </h1>
                 <div>
                     <p><Link to="addQuestion" className = "btn btn-default" > Add Question </Link> </p>
-                    <QuestionList questions = {this.state.questions} displayCheckBox = "false" />
+                    <QuestionList questions = {this.state.questions} checkBoxFlag = {this.state.checkBoxFlag} />
                 </div>
             </div>
         );

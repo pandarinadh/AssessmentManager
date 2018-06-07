@@ -27,7 +27,8 @@ var ManageAssessmentPage = React.createClass({
         return {
             assessment: localAssessment,
             showId: false,
-            AllQuestions: localAllQuestions
+            AllQuestions: localAllQuestions,
+            checkBoxFlag: true
         };
     },
 
@@ -128,7 +129,7 @@ var ManageAssessmentPage = React.createClass({
                             </div>
                         </div>
                         <div className="Row">
-                            <QuestionList questions = {this.state.AllQuestions} assessmentQuestions = {questionList} displayCheckBox = "true" onChange = {this.setQuestionState} />
+                            <QuestionList questions = {this.state.AllQuestions} assessmentQuestions = {questionList} checkBoxFlag = {this.state.checkBoxFlag} onChange = {this.setQuestionState} />
                         </div>
                     </div>
                 </div>

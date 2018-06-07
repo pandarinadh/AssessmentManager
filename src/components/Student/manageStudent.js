@@ -9,6 +9,7 @@ var StudentActions = require("../../actions/studentActions");
 var StudentForm = require("./studentForm");
 var AssessmentList = require('../Assessment/assessmentList');
 var AssessmentStore = require("../../store/assessmentStore");
+var _ = require("lodash");
 
 var ManageStudentPage = React.createClass({
     mixins: [
@@ -26,7 +27,8 @@ var ManageStudentPage = React.createClass({
         return {
             student: localInitStudent,
             showId: false,
-            assessments: localAssessments
+            assessments: localAssessments,
+            checkBoxFlag: true
         };
     },
 
@@ -56,6 +58,33 @@ var ManageStudentPage = React.createClass({
         this.setState({assessments: localAssessments});
 
     },
+
+    setAssessmentState: function (event) {
+          //debugger;
+          var field = event.target.name;
+          if(event.target.checked){
+              var localAssessment = _.find(this.state.assessments, {Id: parseInt(field)});
+              if(!this.state.student.Assessments){
+                this.state.student.Assessments = [];
+              }
+              var studentAssessment = _.find(this.state.student.Assessments, {Id: parseInt(field)});
+              if(studentAssessment){
+                  var existingStudentAssessmentIndex = _.indexOf(this.state.student.Assessments, studentAssessment);
+                  this.state.student.Assessments.splice(existingStudentAssessmentIndex, localAssessment);
+              } else {
+                  this.state.student.Assessments.push(localAssessment);
+              }
+          }
+          else
+          {
+              _.remove(this.state.student.Assessments, function(assessment){
+                  return parseInt(field) === parseInt(assessment.Id);
+              });
+          }
+  
+          return this.setState({student: this.state.student});
+      },
+  
 
     setStudentState: function (event) {
         var field = event.target.name;
@@ -90,7 +119,7 @@ var ManageStudentPage = React.createClass({
                 <div className="Row">
                     <div className="col-lg-4">
                         <h1>Manage Assessment</h1>
-                        <StudentForm student = {localStudent} showId = {this.state.showId} setStudentState = {this.setStudentState} />
+                        <StudentForm student = {localStudent} showId = {this.state.showId} onChange = {this.setStudentState} onSave = {this.saveStudent} />
                     </div>
                     <div className="col-xs-1" style={{alignItems: "center", width: '2px'}}>
                             <div style={{border: '2px solid green', height: '550px', width: '2px' }}> </div>
@@ -104,7 +133,7 @@ var ManageStudentPage = React.createClass({
                             </div>
                         </div>
                         <div className="Row">
-                            <AssessmentList assessments = {this.state.assessments} displayCheckBox = "true" />
+                            <AssessmentList assessments = {this.state.assessments} checkBoxFlag = {this.state.checkBoxFlag} studentAssessments = {localAssessmentList} onChange = {this.setAssessmentState} />
                         </div>
                     </div>
                 </div>

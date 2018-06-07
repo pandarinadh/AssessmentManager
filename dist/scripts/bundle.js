@@ -51246,11 +51246,11 @@ var AssessmentListPage = React.createClass({displayName: "AssessmentListPage",
 
     render: function(){
 
-        var showDelete = this.props.displayCheckBox ? 'none' : 'block';
-        var showCheck = this.props.displayCheckBox ? 'block' : 'none';
+        var showDelete = this.props.checkBoxFlag ? 'none' : 'block';
+        var showCheck = this.props.checkBoxFlag ? 'block' : 'none';
 
         var createAssessmentRow = function(assessment){
-
+//debugger;
             var studentAssessment = _.find(this.props.studentAssessments, {Id: parseInt(assessment.Id)});
 
             var localCheck = studentAssessment ? true : false;
@@ -51309,7 +51309,8 @@ var assessmentPage = React.createClass({displayName: "assessmentPage",
         return {
             assessments: AssessmentStore.getAllAssessments(),
             errors: {},
-            dirty: false
+            dirty: false,
+            checkBoxFlag: false
         };
     },
 
@@ -51338,7 +51339,7 @@ var assessmentPage = React.createClass({displayName: "assessmentPage",
                 React.createElement("h1", null, "Assessment Page "), 
                 React.createElement("div", null, 
                     React.createElement("p", null, React.createElement(Link, {to: "addAssessment", className: "btn btn-default"}, " Add Assessment "), " "), 
-                    React.createElement(AssessmentList, {assessments: this.state.assessments, displayCheckBox: "false"})
+                    React.createElement(AssessmentList, {assessments: this.state.assessments, checkBoxFlag: this.state.checkBoxFlag})
                 )
             )
         );
@@ -51376,7 +51377,8 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
         return {
             assessment: localAssessment,
             showId: false,
-            AllQuestions: localAllQuestions
+            AllQuestions: localAllQuestions,
+            checkBoxFlag: true
         };
     },
 
@@ -51477,7 +51479,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
                             )
                         ), 
                         React.createElement("div", {className: "Row"}, 
-                            React.createElement(QuestionList, {questions: this.state.AllQuestions, assessmentQuestions: questionList, displayCheckBox: "true", onChange: this.setQuestionState})
+                            React.createElement(QuestionList, {questions: this.state.AllQuestions, assessmentQuestions: questionList, checkBoxFlag: this.state.checkBoxFlag, onChange: this.setQuestionState})
                         )
                     )
                 )
@@ -51499,6 +51501,7 @@ var StudentActions = require("../../actions/studentActions");
 var StudentForm = require("./studentForm");
 var AssessmentList = require('../Assessment/assessmentList');
 var AssessmentStore = require("../../store/assessmentStore");
+var _ = require("lodash");
 
 var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
     mixins: [
@@ -51516,7 +51519,8 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
         return {
             student: localInitStudent,
             showId: false,
-            assessments: localAssessments
+            assessments: localAssessments,
+            checkBoxFlag: true
         };
     },
 
@@ -51546,6 +51550,33 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
         this.setState({assessments: localAssessments});
 
     },
+
+    setAssessmentState: function (event) {
+          //debugger;
+          var field = event.target.name;
+          if(event.target.checked){
+              var localAssessment = _.find(this.state.assessments, {Id: parseInt(field)});
+              if(!this.state.student.Assessments){
+                this.state.student.Assessments = [];
+              }
+              var studentAssessment = _.find(this.state.student.Assessments, {Id: parseInt(field)});
+              if(studentAssessment){
+                  var existingStudentAssessmentIndex = _.indexOf(this.state.student.Assessments, studentAssessment);
+                  this.state.student.Assessments.splice(existingStudentAssessmentIndex, localAssessment);
+              } else {
+                  this.state.student.Assessments.push(localAssessment);
+              }
+          }
+          else
+          {
+              _.remove(this.state.student.Assessments, function(assessment){
+                  return parseInt(field) === parseInt(assessment.Id);
+              });
+          }
+  
+          return this.setState({student: this.state.student});
+      },
+  
 
     setStudentState: function (event) {
         var field = event.target.name;
@@ -51580,7 +51611,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                 React.createElement("div", {className: "Row"}, 
                     React.createElement("div", {className: "col-lg-4"}, 
                         React.createElement("h1", null, "Manage Assessment"), 
-                        React.createElement(StudentForm, {student: localStudent, showId: this.state.showId, setStudentState: this.setStudentState})
+                        React.createElement(StudentForm, {student: localStudent, showId: this.state.showId, onChange: this.setStudentState, onSave: this.saveStudent})
                     ), 
                     React.createElement("div", {className: "col-xs-1", style: {alignItems: "center", width: '2px'}}, 
                             React.createElement("div", {style: {border: '2px solid green', height: '550px', width: '2px'}}, " ")
@@ -51594,7 +51625,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                             )
                         ), 
                         React.createElement("div", {className: "Row"}, 
-                            React.createElement(AssessmentList, {assessments: this.state.assessments, displayCheckBox: "true"})
+                            React.createElement(AssessmentList, {assessments: this.state.assessments, checkBoxFlag: this.state.checkBoxFlag, studentAssessments: localAssessmentList, onChange: this.setAssessmentState})
                         )
                     )
                 )
@@ -51604,7 +51635,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
 });
 
 module.exports = ManageStudentPage;
-},{"../../actions/studentActions":208,"../../store/assessmentStore":241,"../../store/studentStore":243,"../Assessment/assessmentList":217,"./studentForm":221,"react":202,"react-router":33,"toastr":203}],221:[function(require,module,exports){
+},{"../../actions/studentActions":208,"../../store/assessmentStore":241,"../../store/studentStore":243,"../Assessment/assessmentList":217,"./studentForm":221,"lodash":6,"react":202,"react-router":33,"toastr":203}],221:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -51623,7 +51654,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                         React.createElement("div", null, 
                             React.createElement("label", {htmlFor: "student"}, "Id "), 
                             React.createElement("div", {className: "field"}, 
-                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.student.Id, className: "form-control", onChange: this.props.setStudentState})
+                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.student.Id, className: "form-control", onChange: this.props.onChange})
                             )
                         )
                     )
@@ -51632,7 +51663,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "student"}, "Name "), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Name", value: this.props.student.Name, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "Name", value: this.props.student.Name, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -51640,7 +51671,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Address"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Address", value: this.props.student.Address, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "Address", value: this.props.student.Address, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -51648,7 +51679,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "City"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "City", value: this.props.student.City, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "City", value: this.props.student.City, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -51656,7 +51687,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "State"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "State", value: this.props.student.State, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "State", value: this.props.student.State, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -51664,12 +51695,12 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Zip"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Zip", value: this.props.student.Zip, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "Zip", value: this.props.student.Zip, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
                 React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {type: "submit", value: "Save Student", className: "btn btn-default", onClick: this.props.saveStudent}), 
+                    React.createElement("input", {type: "submit", value: "Save Student", className: "btn btn-default", onClick: this.props.onSave}), 
                     React.createElement(Link, {to: "students", className: "btn btn-default"}, "Cancel")
                 )
             )
@@ -51894,7 +51925,8 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
         return {
             assessment: localAssessment,
             showId: false,
-            AllQuestions: localAllQuestions
+            AllQuestions: localAllQuestions,
+            checkBoxFlag: true
         };
     },
 
@@ -51995,7 +52027,7 @@ var ManageAssessmentPage = React.createClass({displayName: "ManageAssessmentPage
                             )
                         ), 
                         React.createElement("div", {className: "Row"}, 
-                            React.createElement(QuestionList, {questions: this.state.AllQuestions, assessmentQuestions: questionList, displayCheckBox: "true", onChange: this.setQuestionState})
+                            React.createElement(QuestionList, {questions: this.state.AllQuestions, assessmentQuestions: questionList, checkBoxFlag: this.state.checkBoxFlag, onChange: this.setQuestionState})
                         )
                     )
                 )
@@ -52224,8 +52256,8 @@ var QuestionListPage = React.createClass({displayName: "QuestionListPage",
 
 
     render: function(){
-        var showDelete = this.props.displayCheckBox ? 'none' : 'block';
-        var showCheck = this.props.displayCheckBox ? 'block' : 'none';
+        var showDelete = this.props.checkBoxFlag ? 'none' : 'block';
+        var showCheck = this.props.checkBoxFlag ? 'block' : 'none';
         console.log(this.props.assessmentQuestions);
         var createQuestionRow = function(question){
 
@@ -52292,7 +52324,8 @@ var questionPage = React.createClass({displayName: "questionPage",
         return {
             questions: QuestionStore.getAllQuestions(),
             errors: {},
-            dirty: false
+            dirty: false,
+            checkBoxFlag: false
         };
     },
 
@@ -52321,7 +52354,7 @@ var questionPage = React.createClass({displayName: "questionPage",
                 React.createElement("h1", null, "Question Page "), 
                 React.createElement("div", null, 
                     React.createElement("p", null, React.createElement(Link, {to: "addQuestion", className: "btn btn-default"}, " Add Question "), " "), 
-                    React.createElement(QuestionList, {questions: this.state.questions, displayCheckBox: "false"})
+                    React.createElement(QuestionList, {questions: this.state.questions, checkBoxFlag: this.state.checkBoxFlag})
                 )
             )
         );
@@ -52393,6 +52426,7 @@ var StudentActions = require("../../actions/studentActions");
 var StudentForm = require("./studentForm");
 var AssessmentList = require('../Assessment/assessmentList');
 var AssessmentStore = require("../../store/assessmentStore");
+var _ = require("lodash");
 
 var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
     mixins: [
@@ -52410,7 +52444,8 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
         return {
             student: localInitStudent,
             showId: false,
-            assessments: localAssessments
+            assessments: localAssessments,
+            checkBoxFlag: true
         };
     },
 
@@ -52440,6 +52475,33 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
         this.setState({assessments: localAssessments});
 
     },
+
+    setAssessmentState: function (event) {
+          //debugger;
+          var field = event.target.name;
+          if(event.target.checked){
+              var localAssessment = _.find(this.state.assessments, {Id: parseInt(field)});
+              if(!this.state.student.Assessments){
+                this.state.student.Assessments = [];
+              }
+              var studentAssessment = _.find(this.state.student.Assessments, {Id: parseInt(field)});
+              if(studentAssessment){
+                  var existingStudentAssessmentIndex = _.indexOf(this.state.student.Assessments, studentAssessment);
+                  this.state.student.Assessments.splice(existingStudentAssessmentIndex, localAssessment);
+              } else {
+                  this.state.student.Assessments.push(localAssessment);
+              }
+          }
+          else
+          {
+              _.remove(this.state.student.Assessments, function(assessment){
+                  return parseInt(field) === parseInt(assessment.Id);
+              });
+          }
+  
+          return this.setState({student: this.state.student});
+      },
+  
 
     setStudentState: function (event) {
         var field = event.target.name;
@@ -52474,7 +52536,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                 React.createElement("div", {className: "Row"}, 
                     React.createElement("div", {className: "col-lg-4"}, 
                         React.createElement("h1", null, "Manage Assessment"), 
-                        React.createElement(StudentForm, {student: localStudent, showId: this.state.showId, setStudentState: this.setStudentState})
+                        React.createElement(StudentForm, {student: localStudent, showId: this.state.showId, onChange: this.setStudentState, onSave: this.saveStudent})
                     ), 
                     React.createElement("div", {className: "col-xs-1", style: {alignItems: "center", width: '2px'}}, 
                             React.createElement("div", {style: {border: '2px solid green', height: '550px', width: '2px'}}, " ")
@@ -52488,7 +52550,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
                             )
                         ), 
                         React.createElement("div", {className: "Row"}, 
-                            React.createElement(AssessmentList, {assessments: this.state.assessments, displayCheckBox: "true"})
+                            React.createElement(AssessmentList, {assessments: this.state.assessments, checkBoxFlag: this.state.checkBoxFlag, studentAssessments: localAssessmentList, onChange: this.setAssessmentState})
                         )
                     )
                 )
@@ -52498,7 +52560,7 @@ var ManageStudentPage = React.createClass({displayName: "ManageStudentPage",
 });
 
 module.exports = ManageStudentPage;
-},{"../../actions/studentActions":208,"../../store/assessmentStore":241,"../../store/studentStore":243,"../Assessment/assessmentList":217,"./studentForm":234,"react":202,"react-router":33,"toastr":203}],234:[function(require,module,exports){
+},{"../../actions/studentActions":208,"../../store/assessmentStore":241,"../../store/studentStore":243,"../Assessment/assessmentList":217,"./studentForm":234,"lodash":6,"react":202,"react-router":33,"toastr":203}],234:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -52517,7 +52579,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                         React.createElement("div", null, 
                             React.createElement("label", {htmlFor: "student"}, "Id "), 
                             React.createElement("div", {className: "field"}, 
-                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.student.Id, className: "form-control", onChange: this.props.setStudentState})
+                                React.createElement("input", {type: "text", name: "Text", readOnly: true, value: this.props.student.Id, className: "form-control", onChange: this.props.onChange})
                             )
                         )
                     )
@@ -52526,7 +52588,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "student"}, "Name "), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Name", value: this.props.student.Name, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "Name", value: this.props.student.Name, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -52534,7 +52596,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Address"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Address", value: this.props.student.Address, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "Address", value: this.props.student.Address, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -52542,7 +52604,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "City"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "City", value: this.props.student.City, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "City", value: this.props.student.City, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -52550,7 +52612,7 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "State"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "State", value: this.props.student.State, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "State", value: this.props.student.State, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
@@ -52558,12 +52620,12 @@ var StudentForm = React.createClass({displayName: "StudentForm",
                     React.createElement("div", null, 
                         React.createElement("label", {htmlFor: "description"}, "Zip"), 
                         React.createElement("div", {className: "field"}, 
-                            React.createElement("input", {type: "text", name: "Zip", value: this.props.student.Zip, className: "form-control", onChange: this.props.setStudentState})
+                            React.createElement("input", {type: "text", name: "Zip", value: this.props.student.Zip, className: "form-control", onChange: this.props.onChange})
                         )
                     )
                 ), 
                 React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {type: "submit", value: "Save Student", className: "btn btn-default", onClick: this.props.saveStudent}), 
+                    React.createElement("input", {type: "submit", value: "Save Student", className: "btn btn-default", onClick: this.props.onSave}), 
                     React.createElement(Link, {to: "students", className: "btn btn-default"}, "Cancel")
                 )
             )

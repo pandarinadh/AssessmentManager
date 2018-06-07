@@ -22,8 +22,8 @@ var QuestionListPage = React.createClass({
 
 
     render: function(){
-        var showDelete = this.props.displayCheckBox ? 'none' : 'block';
-        var showCheck = this.props.displayCheckBox ? 'block' : 'none';
+        var showDelete = this.props.checkBoxFlag ? 'none' : 'block';
+        var showCheck = this.props.checkBoxFlag ? 'block' : 'none';
         console.log(this.props.assessmentQuestions);
         var createQuestionRow = function(question){
 

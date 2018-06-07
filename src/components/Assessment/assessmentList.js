@@ -22,11 +22,11 @@ var AssessmentListPage = React.createClass({
 
     render: function(){
 
-        var showDelete = this.props.displayCheckBox ? 'none' : 'block';
-        var showCheck = this.props.displayCheckBox ? 'block' : 'none';
+        var showDelete = this.props.checkBoxFlag ? 'none' : 'block';
+        var showCheck = this.props.checkBoxFlag ? 'block' : 'none';
 
         var createAssessmentRow = function(assessment){
-
+//debugger;
             var studentAssessment = _.find(this.props.studentAssessments, {Id: parseInt(assessment.Id)});
 
             var localCheck = studentAssessment ? true : false;
