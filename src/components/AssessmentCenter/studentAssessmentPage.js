@@ -7,6 +7,8 @@ var AssessmentCenterList = require("./assessmentCenterList");
 var AssessmentCenterStore = require("../../store/assessmentCenterStore");
 var AssessmentCenterActions = require("./../../actions/assessmentCenterActions");
 var AssessmentStore = require("../../store/assessmentStore");
+var StudentStore = require("../../store/studentStore");
+
 var _ = require("lodash");
 
 var StudentAssessmentPage = React.createClass({
@@ -19,11 +21,11 @@ var StudentAssessmentPage = React.createClass({
         var studentId = this.props.params.studentId;
         var assessmentId = this.props.params.assessmentId;
         var localAssessment = AssessmentStore.getAssessmentById(assessmentId);
-        var localstudentAssessment = AssessmentCenterStore.getStudentAssessmentsById(studentId);
+        var localstudent = StudentStore.getStudentById(studentId);
         var randomValue = localAssessment ? this.randomValue(localAssessment.Questions.length) : 0;
         return {
             generatedRandomValues: [randomValue],
-            studentAssessment: localstudentAssessment ? localstudentAssessment : {},
+            student: localstudent ? localstudent : {},
             assessment: localAssessment ? localAssessment : {},
             errors: {},
             dirty: true,
@@ -90,9 +92,9 @@ var StudentAssessmentPage = React.createClass({
         var studentId = this.props.params.studentId;
         var assessmentId = this.props.params.assessmentId;
         var localAssessment = AssessmentStore.getAssessmentById(assessmentId);
-       var localstudentAssessment = AssessmentCenterStore.getStudentAssessmentsById(studentId);
+        var localstudent = StudentStore.getStudentById(studentId);
         this.setState({
-            studentAssessment: localstudentAssessment ? localstudentAssessment : {},
+            student: localstudent ? localstudent : {},
             assessment: localAssessment ? localAssessment : {},
             questionId: this.state.questionId,
             question: localAssessment ? localAssessment.Questions[this.state.questionId] : {}
@@ -117,25 +119,28 @@ var StudentAssessmentPage = React.createClass({
 
       processAnswer: function(){
         var assessmentId = this.props.params.assessmentId;
-        
+        var localStudent = this.state.student;
         //debugger;
         if(this.state.done !== 'block'){
             if(this.state.anweredQuestions.indexOf(this.state.question) === -1){
                 this.state.anweredQuestions.push(this.state.question);
-                var localStudentAssessment = _.find(this.state.studentAssessment.Student.Assessments, {Id: parseInt(assessmentId)});
-                var existingAssessmentIndex = _.indexOf(this.state.studentAssessment.Student.Assessments, localStudentAssessment);
-                
-                var localQuestion = _.find(this.state.studentAssessment.Student.Assessments[existingAssessmentIndex].Questions, {Id: parseInt(this.state.question.Id)});
+                var localAssessment = _.find(this.state.student.Assessments, {Id: parseInt(assessmentId)});
+                localStudent.Assessments = [];
+                localStudent.Assessments.push(localAssessment);
+                var localQuestion = _.find(localStudent.Assessments[0].Questions, {Id: parseInt(this.state.question.Id)});
 
-                var existingQuestionIndex = _.indexOf(this.state.studentAssessment.Student.Assessments[existingAssessmentIndex].Questions, localQuestion);
-                this.state.studentAssessment.Student.Assessments[existingAssessmentIndex].Questions[existingQuestionIndex] = this.state.question;
+                var existingQuestionIndex = _.indexOf(localStudent.Assessments[0].Questions, localQuestion);
+                localStudent.Assessments[0].Questions[0] = this.state.question;
             }
        
             var randomValue = this.randomValue1(this.state.assessment.Questions.length);
 
             if(randomValue === -1) { 
             
-                AssessmentCenterActions.saveStudetnAssessment(this.state.studentAssessment);
+                var StudentAssessment = {Id: 0, Student: {}, Date: new Date(), Status: 'Yes' };
+
+                StudentAssessment.Student = localStudent;
+                AssessmentCenterActions.saveStudetnAssessment(StudentAssessment);
                 this.setState({dirty: false});
                 return; 
             }
@@ -204,7 +209,7 @@ var StudentAssessmentPage = React.createClass({
         var displayValue = this.state.anweredQuestions.length > 0 ? 'block' : 'none';
 
         var displayDoneValue = this.state.done === 'none' ? 'block' : 'none';
-        var studentName = this.state.studentAssessment.Student ? this.state.studentAssessment.Student.Name : '';
+        var studentName = this.state.student ? this.state.student.Name : '';
         var totalQuestionLength = this.state.assessment.Questions ? this.state.assessment.Questions.length : 0;
         var answeredQuestionLength = this.state.anweredQuestions ? this.state.anweredQuestions.length + 1 : 0;
 

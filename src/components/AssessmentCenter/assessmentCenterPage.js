@@ -4,13 +4,14 @@ var React = require("react");
 var Link = require("react-router").Link;
 var AssessmentCenterList = require("./assessmentCenterList");
 var AssessmentCenterStore = require("../../store/assessmentCenterStore");
+var StudentStore = require("../../store/studentStore");
 
 var AssessmentCenterPage = React.createClass({
 
     getInitialState: function() {
         console.log('getInitialState in AssessmentCenterPage');
         return {
-            studentAssessments: AssessmentCenterStore.getAllStudentAssessments(),
+            students: StudentStore.getAllStudents(),
             errors: {},
             dirty: false
         };
@@ -19,19 +20,19 @@ var AssessmentCenterPage = React.createClass({
     componentWillMount: function() {
         //debugger;
         console.log('componentWillMount in AssessmentCenterPage');
-        AssessmentCenterStore.addChangeListener(this._onChange);
+        StudentStore.addChangeListener(this._onChange);
     },
  
     componentWillUnmount: function() {
       //  debugger;
       console.log('componentWillUnmount in AssessmentCenterPage');
-      AssessmentCenterStore.removeChangeListener(this._onChange);
+      StudentStore.removeChangeListener(this._onChange);
     },
     
     _onChange: function(){
         //debugger;
         console.log('onchange in AssessmentCenterPage');
-        this.setState({studentAssessments: AssessmentCenterStore.getAllStudentAssessments() });
+        this.setState({students: StudentStore.getAllStudents() });
     },
     
 
@@ -41,7 +42,7 @@ var AssessmentCenterPage = React.createClass({
                 <h1>Assessment Page </h1>
                 <div>
                     <p><Link to="addAssessment" className = "btn btn-default" > Add Assessment </Link> </p>
-                    <AssessmentCenterList studentAssessments = {this.state.studentAssessments} />
+                    <AssessmentCenterList students = {this.state.students} />
                 </div>
             </div>
         );

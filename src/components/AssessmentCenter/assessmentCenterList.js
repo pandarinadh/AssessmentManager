@@ -11,15 +11,15 @@ var AssessmentCenterListPage = React.createClass({
    
     render: function(){
 
-        var createAssessmentCenterRow = function(studentAssessment){
+        var createAssessmentCenterRow = function(student){
             return (
                 <tbody>
-                     <tr key={studentAssessment.Student.Id}>
-                                <td>{studentAssessment.Student.Id}</td>
-                                <td>{studentAssessment.Student.Name}</td>
-                                <td>{studentAssessment.Student.Assessments.map(function (assessment, index) {
+                     <tr key={student.Id}>
+                                <td>{student.Id}</td>
+                                <td>{student.Name}</td>
+                                <td>{student.Assessments.map(function (assessment, index) {
                                     return (
-                                        <li key={index}><Link to="studentAssessmentPage" params={{assessmentId: assessment.Id, studentId: studentAssessment.Student.Id}} >{assessment.Text}</Link></li>
+                                        <li key={index}><Link to="studentAssessmentPage" params={{assessmentId: assessment.Id, studentId: student.Id}} >{assessment.Text}</Link></li>
                                     );
                                 }
                                 )}</td>
@@ -36,7 +36,7 @@ var AssessmentCenterListPage = React.createClass({
                         <th>Student</th>
                         <th>Assessment</th>
                     </thead>
-                        {this.props.studentAssessments.map(createAssessmentCenterRow, this)}
+                        {this.props.students.map(createAssessmentCenterRow, this)}
                 </table>
             </div>
         );
