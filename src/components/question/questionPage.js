@@ -3,7 +3,7 @@
 var React = require("react");
 var Link = require("react-router").Link;
 var QuestionList = require("./questionList");
-var QuestionStore = require("../../store/questionStore");
+var QuestionStore = require("../../flux/store/questionStore");
 
 var questionPage = React.createClass({
 

@@ -4,7 +4,7 @@ var React = require("react");
 var Router = require("react-router");
 var Link = Router.Link;
 var Toastr = require("toastr");
-var QuestionAction = require("../../actions/questionActions");
+var QuestionAction = require("../../flux/actions/questionActions");
 var _ = require("lodash");
 
 var QuestionListPage = React.createClass({

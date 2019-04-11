@@ -4,7 +4,7 @@ var React = require("react");
 var Link = require("react-router").Link;
 var AssessmentList = require("./assessmentList");
 var AssessmentApi = require("../../api/assessmentApi");
-var AssessmentStore = require("../../store/assessmentStore");
+var AssessmentStore = require("../../flux/store/assessmentStore");
 
 var assessmentPage = React.createClass({
 

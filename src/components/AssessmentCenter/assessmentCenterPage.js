@@ -3,8 +3,8 @@
 var React = require("react");
 var Link = require("react-router").Link;
 var AssessmentCenterList = require("./assessmentCenterList");
-var AssessmentCenterStore = require("../../store/assessmentCenterStore");
-var StudentStore = require("../../store/studentStore");
+var AssessmentCenterStore = require("../../flux/store/assessmentCenterStore");
+var StudentStore = require("../../flux/store/studentStore");
 
 var AssessmentCenterPage = React.createClass({
 

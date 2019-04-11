@@ -4,11 +4,11 @@ var React = require("react");
 var Router = require("react-router");
 var Link = Router.Link;
 var Toastr = require("toastr");
-var AssessmentStore = require("../../store/assessmentStore");
-var AssessmentActions = require("../../actions/assessmentActions");
+var AssessmentStore = require("../../flux/store/assessmentStore");
+var AssessmentActions = require("../../flux/actions/assessmentActions");
 var QuestionList = require("./../question/questionList");
 var AssessmentForm = require("./AssessmentForm");
-var QuestionStore = require("../../store/questionStore");
+var QuestionStore = require("../../flux/store/questionStore");
 var _ = require("lodash");
 
 var ManageAssessmentPage = React.createClass({

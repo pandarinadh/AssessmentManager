@@ -1,8 +1,8 @@
 "use strict";
 
-var Dispatcher = require("../dispatcher/appDispatcher");
-var QuestionApi = require("../../api/questionApi");
-var ActionTypes = require("../../constants/actionTypes");
+var Dispatcher = require("../flux/dispatcher/appDispatcher");
+var QuestionApi = require("../api/questionApi");
+var ActionTypes = require("../constants/actionTypes");
 
 var QuestionActions = {
     saveQuestion: function(question){

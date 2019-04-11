@@ -1,8 +1,8 @@
 "use strict";
 
-var Dispatcher = require("../dispatcher/appDispatcher");
-var StudentApi = require("../../api/studentApi");
-var ActionTypes = require("../../constants/actionTypes");
+var Dispatcher = require("../flux/dispatcher/appDispatcher");
+var StudentApi = require("../api/studentApi");
+var ActionTypes = require("../constants/actionTypes");
 
 var StudentActions = {
     saveStudent: function(student){

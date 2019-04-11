@@ -5,7 +5,7 @@ var Router = require("react-router");
 var Link = Router.Link;
 var AssessmentApi = require("../../api/assessmentApi");
 var Toastr = require("toastr");
-var AssessmentAction = require("../../actions/assessmentActions");
+var AssessmentAction = require("../../flux/actions/assessmentActions");
 var _ = require("lodash");
 
 var AssessmentListPage = React.createClass({

@@ -4,10 +4,10 @@ var React = require("react");
 var Router = require("react-router");
 var Link = Router.Link;
 var AssessmentCenterList = require("./assessmentCenterList");
-var AssessmentCenterStore = require("../../store/assessmentCenterStore");
-var AssessmentCenterActions = require("./../../actions/assessmentCenterActions");
-var AssessmentStore = require("../../store/assessmentStore");
-var StudentStore = require("../../store/studentStore");
+var AssessmentCenterStore = require("../../flux/store/assessmentCenterStore");
+var AssessmentCenterActions = require("../../flux/actions/assessmentCenterActions");
+var AssessmentStore = require("../../flux/store/assessmentStore");
+var StudentStore = require("../../flux/store/studentStore");
 
 var _ = require("lodash");
 

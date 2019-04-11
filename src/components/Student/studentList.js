@@ -4,7 +4,7 @@ var React = require("react");
 var Router = require("react-router");
 var Link = Router.Link;
 var Toastr = require("toastr");
-var StudentAction = require("../../actions/studentActions");
+var StudentAction = require("../../flux/actions/studentActions");
 
 var StudentListPage = React.createClass({
     deleteStudent: function(id, event){

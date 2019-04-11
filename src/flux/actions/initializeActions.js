@@ -1,11 +1,11 @@
 "use strict";
 
-var Dispatcher = require("../dispatcher/appDispatcher");
-var ActionTypes = require("../../constants/actionTypes");
-var QuestionApi = require("../../api/questionApi");
-var StudentApi = require("../../api/studentApi");
-var AssessmentApi = require("../../api/assessmentApi");
-var AssessmentCenterApi = require("../../api/assessmentCenterApi");
+var Dispatcher = require("../flux/dispatcher/appDispatcher");
+var ActionTypes = require("../constants/actionTypes");
+var QuestionApi = require("../api/questionApi");
+var StudentApi = require("../api/studentApi");
+var AssessmentApi = require("../api/assessmentApi");
+var AssessmentCenterApi = require("../api/assessmentCenterApi");
 
 var InitializeActions = {
     initApp: function() {

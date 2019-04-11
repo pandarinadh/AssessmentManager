@@ -4,8 +4,8 @@ var React = require("react");
 var Router = require("react-router");
 var Link = Router.Link;
 var Toastr = require("toastr");
-var QuestionStore = require("../../store/questionStore");
-var QuestionActions = require("../../actions/questionActions");
+var QuestionStore = require("../../flux/store/questionStore");
+var QuestionActions = require("../../flux/actions/questionActions");
 var QuestionForm = require("./questionForm");
 
 var ManageQuestionPage = React.createClass({

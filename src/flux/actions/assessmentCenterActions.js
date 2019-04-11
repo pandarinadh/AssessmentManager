@@ -1,8 +1,8 @@
 "use strict";
 
-var Dispatcher = require("../dispatcher/appDispatcher");
-var AssessmentCenterApi = require("../../api/assessmentCenterApi");
-var ActionTypes = require("../../constants/actionTypes");
+var Dispatcher = require("../flux/dispatcher/appDispatcher");
+var AssessmentCenterApi = require("../api/assessmentCenterApi");
+var ActionTypes = require("../constants/actionTypes");
 
 var AssessmentCenterActions = {
     saveStudetnAssessment: function(studentAssessment){

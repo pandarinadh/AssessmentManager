@@ -3,7 +3,7 @@
 var React = require("react");
 var Link = require("react-router").Link;
 var StudentList = require("./studentList");
-var StudentStore = require("../../store/studentStore");
+var StudentStore = require("../../flux/store/studentStore");
 
 var StudentPage = React.createClass({
 
